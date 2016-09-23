@@ -45,8 +45,7 @@ public class DomRuleParser<T> implements RuleParser<T> {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder;
 			builder = documentBuilderFactory.newDocumentBuilder();
-			
-			
+
 			InputStream is = getFileAsStream(ruleFileName);
 			Document document = builder.parse(is);
 
@@ -85,6 +84,12 @@ public class DomRuleParser<T> implements RuleParser<T> {
 
 		int id = Integer.parseInt(element.getAttribute("id"));
 		state.setId(id);
+
+		if (element.hasAttribute("rejector")) {
+			boolean rejector = Boolean.parseBoolean(element.getAttribute("rejector"));
+			state.setRejector(rejector);
+		}
+
 		halfResolvedState.put(id, state);
 	}
 

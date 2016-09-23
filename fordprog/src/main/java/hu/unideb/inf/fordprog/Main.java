@@ -13,13 +13,13 @@ import hu.unideb.inf.fordprog.library.parser.ParseException;
 
 public class Main {
 	public static void main(String... args) {
-		Abc abc = new Abc("-.0123456");
+		Abc abc = new Abc("-.0123456x^7");
 
-		StateTransitionMethod<Character> method = null;
+		StateTransitionMethod<String> method = null;
 		try {
-			method = new SevenStateTransitionMethod("hetes_szamrendszer.xml");
+			method = new SevenStateTransitionMethod<String>("hetes_szamrendszer.xml");
 		} catch (ParseException e) {
-			System.err.println("Hiba történt a fájl szabályleíró feldolgozása során");
+			System.err.println("Hiba történt a szabályleíró fájl feldolgozása során");
 			System.exit(1);
 		} catch (FileNotFoundException e) {
 			System.err.println("Nem található a keresett fájl");
@@ -34,7 +34,7 @@ public class Main {
 		while (!"".equals(buffer)) {
 			try {
 				buffer = br.readLine();
-				ParseResult<Character> result = language.parse(buffer);
+				ParseResult<String> result = language.parse(buffer);
 				System.out.println("\tEredmény:" + result.isAccepted());
 			} catch (IOException e) {
 				System.err.println("Hiba történt a beolvasás során");
