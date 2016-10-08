@@ -63,7 +63,8 @@ public class LogicalLexer {
 
         for (int i = 0; i < input.length(); i++) {
 
-            String character = String.valueOf(input.charAt(i));
+            char charAt = input.charAt(i);
+            String character = String.valueOf(charAt);
             Matcher matcher = tokenPatterns.matcher(character);
             if (matcher.matches()) {
                 if (matcher.group(TokenType.BINCON.name()) != null) {
@@ -73,13 +74,14 @@ public class LogicalLexer {
                 } else if (matcher.group(TokenType.UNCON.name()) != null) {
                     result.append(TokenType.UNCON.name());
                 }
-
             } else {
-                result.append(character);
+                if (!Character.isWhitespace(charAt))
+                    result.append(character);
             }
-            result.append(" ");
+            if (!Character.isWhitespace(charAt))
+                result.append(" ");
         }
-        return result.toString();
+        return result.toString().trim();
 
     }
 }
