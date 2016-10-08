@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class LogicalLexer {
     public enum TokenType {
-        BINCON("[>|&|\\|]"), VAR("[a-z]"), UNCON("[\\-]");
+        BINCON("[>|&|\\|]"), VAR("[a-z|A-Z]"), UNCON("[\\-]"), ETC("[(|)]");
 
         public final String pattern;
 
@@ -73,10 +73,11 @@ public class LogicalLexer {
                     result.append(TokenType.VAR.name());
                 } else if (matcher.group(TokenType.UNCON.name()) != null) {
                     result.append(TokenType.UNCON.name());
+                } else if (matcher.group(TokenType.ETC.name()) != null) {
+                    result.append(charAt);
                 }
             } else {
-                if (!Character.isWhitespace(charAt))
-                    result.append(character);
+                return "ERROR!";
             }
             if (!Character.isWhitespace(charAt))
                 result.append(" ");
