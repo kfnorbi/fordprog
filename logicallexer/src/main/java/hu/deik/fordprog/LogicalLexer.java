@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class LogicalLexer {
     public enum TokenType {
-        BINCON("[>|&|\\|]"), VAR("[a-z|A-Z]"), UNCON("[\\-]"), ETC("[(|)]");
+        BINCON("[>|&|\\|]"), VAR("[a-z|A-Z]"), UNCON("[\\-]"), ETC("[(|)|\\s]");
 
         public final String pattern;
 
