@@ -5,31 +5,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LogicalLexer {
-    public enum TokenType {
-        BINCON("[>|&|\\|]"), VAR("[a-z|A-Z]"), UNCON("[\\-]"), ETC("[(|)|\\s]");
-
-        public final String pattern;
-
-        private TokenType(String pattern) {
-            this.pattern = pattern;
-        }
-    }
-
-    public class Token {
-        public TokenType type;
-        public String data;
-
-        public Token(TokenType type, String data) {
-            this.type = type;
-            this.data = data;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("(%s %s)", type.name(), data);
-        }
-    }
-
     // JUST AN EXAMPLE - how to use group and formatted regexp.
     public ArrayList<Token> lex(String input) {
         ArrayList<Token> tokens = new ArrayList<Token>();
@@ -41,14 +16,19 @@ public class LogicalLexer {
 
         Matcher matcher = tokenPatterns.matcher(input);
         while (matcher.find()) {
-            if (matcher.group(TokenType.BINCON.name()) != null) {
-                tokens.add(new Token(TokenType.BINCON, matcher.group(TokenType.BINCON.name())));
-                continue;
-            } else if (matcher.group(TokenType.VAR.name()) != null) {
-                tokens.add(new Token(TokenType.VAR, matcher.group(TokenType.VAR.name())));
-                continue;
-            } else if (matcher.group(TokenType.UNCON.name()) != null)
-                continue;
+//            if (matcher.group(TokenType.BINCON.name()) != null) {
+//                tokens.add(new Token(TokenType.BINCON, matcher.group(TokenType.BINCON.name())));
+//                continue;
+//            } else if (matcher.group(TokenType.VAR.name()) != null) {
+//                tokens.add(new Token(TokenType.VAR, matcher.group(TokenType.VAR.name())));
+//                continue;
+//            } else if (matcher.group(TokenType.UNCON.name()) != null)
+//                continue;
+        	for (TokenType type : TokenType.values()){
+        		if (matcher.group(type.name()) != null){
+        			tokens.add(new Token(type, matcher.group(type.name())));
+        		}
+        	}
         }
 
         return tokens;
@@ -67,15 +47,21 @@ public class LogicalLexer {
             String character = String.valueOf(charAt);
             Matcher matcher = tokenPatterns.matcher(character);
             if (matcher.matches()) {
-                if (matcher.group(TokenType.BINCON.name()) != null) {
-                    result.append(TokenType.BINCON.name());
-                } else if (matcher.group(TokenType.VAR.name()) != null) {
-                    result.append(TokenType.VAR.name());
-                } else if (matcher.group(TokenType.UNCON.name()) != null) {
-                    result.append(TokenType.UNCON.name());
-                } else if (matcher.group(TokenType.ETC.name()) != null) {
-                    result.append(charAt);
-                }
+            	//refactored
+//                if (matcher.group(TokenType.BINCON.name()) != null) {
+//                    result.append(TokenType.BINCON.name());
+//                } else if (matcher.group(TokenType.VAR.name()) != null) {
+//                    result.append(TokenType.VAR.name());
+//                } else if (matcher.group(TokenType.UNCON.name()) != null) {
+//                    result.append(TokenType.UNCON.name());
+//                } else if (matcher.group(TokenType.ETC.name()) != null) {
+//                    result.append(charAt);
+//                }
+            	for (TokenType type : TokenType.values()){
+            		if (matcher.group(type.name()) != null){
+            			result.append(type.name());
+            		}
+            	}
             } else {
                 return "ERROR!";
             }
