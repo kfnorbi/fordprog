@@ -1,29 +1,25 @@
 package hu.deik.fordprog.semantics.logic;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import hu.deik.fordprog.TokenType;
 import hu.deik.fordprog.semantics.RDPState;
 
-/**
- * 
- * & | >
- *
- */
-public class BinaryOperators extends RDPState {
+public class Indent extends RDPState {
+
+	@Override
+	public Map<TokenType, Class<? extends RDPState>> getTokenMatchers() {
+		return previous.getTokenMatchers();
+	}
 
 	@Override
 	public boolean isTerminal() {
-		return false;
+		return previous.isTerminal();
 	}
 
 	@Override
 	public Map<TokenType, Class<? extends RDPState>> buildTokenMap(Map<TokenType, Class<? extends RDPState>> map) {
-		map.put(TokenType.NEGATE, Negate.class);
-		map.put(TokenType.VAR, Variable.class);
-		map.put(TokenType.LEFTPARENTHESIS, LeftParenthesis.class);
-		return map;
+		return previous.buildTokenMap(map);
 	}
 
 }

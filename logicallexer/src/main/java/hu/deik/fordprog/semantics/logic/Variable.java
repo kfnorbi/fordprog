@@ -14,18 +14,17 @@ import hu.deik.fordprog.semantics.RDPState;
 public class Variable extends RDPState {
 
 	@Override
-	protected Map<TokenType, Class<? extends RDPState>> getTokenMatchers() {
-		Map<TokenType, Class<? extends RDPState>> states = new HashMap<>();
-		states.put(TokenType.AND, BinaryOperators.class);
-		states.put(TokenType.OR, BinaryOperators.class);
-		states.put(TokenType.IMPLICATION, BinaryOperators.class);
-		states.put(TokenType.RIGHTPARENTHESIS, Variable.class);
-		return states;
+	public boolean isTerminal() {
+		return true;
 	}
 
 	@Override
-	public boolean isTerminal() {
-		return true;
+	public Map<TokenType, Class<? extends RDPState>> buildTokenMap(Map<TokenType, Class<? extends RDPState>> map) {
+		map.put(TokenType.AND, BinaryOperators.class);
+		map.put(TokenType.OR, BinaryOperators.class);
+		map.put(TokenType.IMPLICATION, BinaryOperators.class);
+		map.put(TokenType.RIGHTPARENTHESIS, Variable.class);
+		return map;
 	}
 
 }

@@ -12,19 +12,17 @@ import hu.deik.fordprog.semantics.RDPState;
  *
  */
 public class Negate extends RDPState {
-
-	@Override
-	protected Map<TokenType, Class<? extends RDPState>> getTokenMatchers() {
-		Map<TokenType, Class<? extends RDPState>> states = new HashMap<>();
-		states.put(TokenType.NEGATE, Negate.class);
-		states.put(TokenType.VAR, Variable.class);
-		states.put(TokenType.LEFTPARENTHESIS, Variable.class);
-		return states;
-	}
-
 	@Override
 	public boolean isTerminal() {
 		return false;
+	}
+
+	@Override
+	public Map<TokenType, Class<? extends RDPState>> buildTokenMap(Map<TokenType, Class<? extends RDPState>> map) {
+		map.put(TokenType.NEGATE, Negate.class);
+		map.put(TokenType.VAR, Variable.class);
+		map.put(TokenType.LEFTPARENTHESIS, Variable.class);
+		return map;
 	}
 
 }
