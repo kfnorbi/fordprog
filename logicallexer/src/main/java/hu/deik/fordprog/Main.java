@@ -1,21 +1,28 @@
 package hu.deik.fordprog;
 
-import java.util.List;
 import java.util.Scanner;
 
-import hu.deik.fordprog.semantics.RDPChecker;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+
+import generated.LogicLexer;
+import generated.LogicParser;
 
 public class Main {
 
 	public static void main(String[] args) {
-		LogicalLexer lexer = new LogicalLexer();
 		Scanner sc = new Scanner(System.in);
-		RDPChecker checker = new RDPChecker();
 		while (sc.hasNextLine()) {
-			String line = sc.nextLine();
-			List<Token> output = lexer.lex(line);
-			System.out.println(checker.check(output)?"Elfogadva":"Elutasitva");
-			System.out.println(output);
+			try {
+				LogicLexer lexer = new LogicLexer(new ANTLRInputStream(sc.nextLine()));
+				lexer.removeErrorListeners();
+				lexer.addErrorListener(new CustomAntlrErrorListener());
+				LogicParser parser = new LogicParser(new CommonTokenStream(lexer));
+				parser.expression();
+				System.out.println("OK");
+			} catch (RuntimeException e) {
+				System.out.println("hibás");
+			}
 		}
 		sc.close();
 	}
