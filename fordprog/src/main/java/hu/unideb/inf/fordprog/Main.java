@@ -1,48 +1,23 @@
 package hu.unideb.inf.fordprog;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 
-import hu.unideb.inf.fordprog.library.Abc;
-import hu.unideb.inf.fordprog.library.Language;
-import hu.unideb.inf.fordprog.library.ParseResult;
-import hu.unideb.inf.fordprog.library.StateTransitionMethod;
-import hu.unideb.inf.fordprog.library.parser.ParseException;
+import generated.HetedhetLexer;
+import generated.HetedhetParser;
 
 public class Main {
 	public static void main(String... args) {
-		Abc abc = new Abc("-.0123456x^7");
-
-		StateTransitionMethod<String> method = null;
 		try {
-			method = new SevenStateTransitionMethod<String>("hetes_szamrendszer.xml");
-		} catch (ParseException e) {
-			System.err.println("Hiba történt a szabályleíró fájl feldolgozása során");
-			System.exit(1);
-		} catch (FileNotFoundException e) {
-			System.err.println("Nem található a keresett fájl");
-			System.exit(1);
+			HetedhetLexer lexer = new HetedhetLexer(new ANTLRInputStream("6666x7^55"));
+			lexer.removeErrorListeners();
+			lexer.addErrorListener(new CustomAntlrErrorListener());
+			HetedhetParser parser = new HetedhetParser(new CommonTokenStream(lexer));
+			parser.eval();
+			System.out.println("OK");
+		} catch (RuntimeException e) {
+			System.out.println("hibás");
 		}
-
-		Language language = new Language(abc, method);
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-		String buffer = ".";
-		while (!"".equals(buffer)) {
-			try {
-				buffer = br.readLine();
-				ParseResult<String> result = language.parse(buffer);
-				System.out.println("\tEredmény:" + result.isAccepted());
-			} catch (IOException e) {
-				System.err.println("Hiba történt a beolvasás során");
-			
-			}
-		}
-
-		language.parse("-122.122");
-
 	}
 }

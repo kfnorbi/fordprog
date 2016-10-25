@@ -4,6 +4,13 @@
 	<groupId>hu.unideb.inf</groupId>
 	<artifactId>fordprog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<dependencies>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4</artifactId>
+			<version>4.5.3</version>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -22,6 +29,27 @@
 				<configuration>
 					<mainClass>hu.unideb.inf.fordprog.Main</mainClass>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-maven-plugin</artifactId>
+				<version>4.5.3</version>
+				<executions>
+					<execution>
+						<id>EZMIAFASZ</id>
+						<goals>
+							<goal>antlr4</goal>
+						</goals>
+						<phase>generate-sources</phase>
+						<configuration>
+							<outputDirectory>src/target/generated</outputDirectory>
+							<!-- <libDirectory>src/main/resources/antlr</libDirectory> -->
+							<!-- <includes> -->
+							<!-- <include>src/main/resources/antlr/hetethet.g</include> -->
+							<!-- </includes> -->
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
