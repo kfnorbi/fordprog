@@ -6,7 +6,7 @@ package generated;
 
 
 eval
-	:	('+'|'-')?digit+('.'digit+)?('x7^'digit+)?
+	:	('+'|'-')?DIGIT+('.'DIGIT+)?('x7^'DIGIT+)?
 	;
 	
-digit:	'0'|'1'|'2'|'3'|'4'|'5'|'6' ;
+DIGIT:	[0-9];

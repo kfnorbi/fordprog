@@ -36,17 +36,13 @@
 				<version>4.5.3</version>
 				<executions>
 					<execution>
-						<id>EZMIAFASZ</id>
+						<id>ID</id>
 						<goals>
 							<goal>antlr4</goal>
 						</goals>
 						<phase>generate-sources</phase>
 						<configuration>
 							<outputDirectory>src/target/generated</outputDirectory>
-							<!-- <libDirectory>src/main/resources/antlr</libDirectory> -->
-							<!-- <includes> -->
-							<!-- <include>src/main/resources/antlr/hetethet.g</include> -->
-							<!-- </includes> -->
 						</configuration>
 					</execution>
 				</executions>
