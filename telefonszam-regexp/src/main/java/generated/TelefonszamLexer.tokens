@@ -1,0 +1,15 @@
+Plusz=1
+INT1=2
+INT2=3
+INT3=4
+INT4=5
+INT5=6
+INT6=7
+INT7=8
+INT8=9
+INT9=10
+Kotojel=11
+WS=12
+DIGIT=13
+'+'=1
+'-'=11

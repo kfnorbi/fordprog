@@ -11,9 +11,9 @@ public class Main {
 			String line = sc.nextLine();
 			
 			if (matcher.match(line)){
-				System.out.println(" elfogadva");				
+				System.out.println("elfogadva");				
 			}else{
-				System.out.println(" elutasitva");
+				System.out.println("elutasitva");
 			}
 			
 		}

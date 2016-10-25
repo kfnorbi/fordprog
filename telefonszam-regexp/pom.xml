@@ -23,9 +23,35 @@
 					<mainClass>hu.unideb.inf.fordprog.telefonszam.Main</mainClass>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-maven-plugin</artifactId>
+				<version>4.5.3</version>
+				<executions>
+					<execution>
+						<id>ID</id>
+						<goals>
+							<goal>antlr4</goal>
+						</goals>
+						<phase>generate-sources</phase>
+						<configuration>
+							<outputDirectory>src/main/java/generated</outputDirectory>
+							<!-- <libDirectory>src/main/resources/antlr</libDirectory> -->
+							<!-- <includes> -->
+							<!-- <include>src/main/resources/antlr/hetethet.g</include> -->
+							<!-- </includes> -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4</artifactId>
+			<version>4.5.3</version>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
