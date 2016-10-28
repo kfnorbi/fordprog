@@ -42,7 +42,8 @@
 						</goals>
 						<phase>generate-sources</phase>
 						<configuration>
-							<outputDirectory>src/main/java/generated</outputDirectory>
+							<visitor>true</visitor>
+							<outputDirectory>${project.build.directory}/antlr-classes/generated</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
