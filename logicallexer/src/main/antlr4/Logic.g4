@@ -25,12 +25,12 @@ import java.util.Scanner;
 
 
 expression:
-	       variable #varExpr
+		   var=VAR #varExpression
 		 | LEFT_PARENTHESIS  expr=expression  RIGHT_PARENTHESIS #parExpr  
-		 | left=expression operator=binaryOperator('|')  right=expression  #orExpr
-		 | left=expression operator=binaryOperator('&')  right=expression  #andExpr
-		 | left=expression operator=binaryOperator('>')  right=expression  #implicationExpr
-		 | operator=unariOperator  expr=expression #unExpr
+		 | left=expression OR  right=expression  #orExpr
+		 | left=expression AND right=expression  #andExpr
+		 | left=expression IMPLICATION right=expression  #implicationExpr
+		 | NEGATE subexpression=expression #unExpr
 	;
 
 binaryOperator:
@@ -41,10 +41,6 @@ unariOperator:
 	NEGATE
 ;
 	
-variable :
-	VAR
-	;
-
 OR: '|';
 AND: '&';
 IMPLICATION:'>';
