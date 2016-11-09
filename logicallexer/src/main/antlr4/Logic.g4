@@ -27,14 +27,14 @@ import java.util.Scanner;
 expression:
 		   var=VAR #varExpression
 		 | LEFT_PARENTHESIS  expr=expression  RIGHT_PARENTHESIS #parExpr  
-		 | left=expression OR  right=expression  #orExpr
-		 | left=expression AND right=expression  #andExpr
-		 | left=expression IMPLICATION right=expression  #implicationExpr
 		 | NEGATE subexpression=expression #unExpr
+		 | left=expression AND right=expression  #andExpr
+		 | left=expression OR  right=expression  #orExpr
+		 | left=expression IMPLICATION right=expression  #implicationExpr
 	;
 
 binaryOperator:
-	OR | AND | IMPLICATION
+	 AND | OR | IMPLICATION
 	;
 	
 unariOperator:
