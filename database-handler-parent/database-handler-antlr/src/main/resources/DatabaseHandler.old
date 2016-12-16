@@ -1,0 +1,28 @@
+grammar DatabaseHandler;
+
+@header{
+package hu.unideb.inf.fordprog.antlr4;
+}
+
+sqlStatement:
+	createTableStatement
+		;
+
+createTableStatement:
+	'CREATE TABLE 'table_name' {'columnDefinition+'};'
+		;
+
+columnDefinition:
+	column_name' 'column_type coma+
+		;
+insertDefinition:
+	'INSERT INTO 'table_name' ('column_name+')' VALUES ('value+')';'
+	    ;
+
+table_name: CHAR+;
+column_name: CHAR+;
+column_type : CHAR+;
+value: CHAR+ | (CHAR+''coma);
+coma:',';
+column_modifier:'NOT NULL'|'PRIMARY KEY';
+CHAR:('a'..'z' | 'A'..'Z' | '_' | '0'..'9');

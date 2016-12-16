@@ -22,7 +22,7 @@
 						<phase>generate-sources</phase>
 						<configuration>
 							<visitor>true</visitor>
-							<outputDirectory>${project.build.directory}/antlr-classes/hu/unideb/inf/fordprog/antlr4</outputDirectory>
+							<outputDirectory>src/main/java/hu/unideb/inf/fordprog/antlr4/</outputDirectory>
 							<sourceDirectory>${basedir}/src/main/resources</sourceDirectory>
 						</configuration>
 					</execution>
