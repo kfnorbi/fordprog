@@ -104,16 +104,17 @@ public class DatabaseHandlerListenerImpl implements DatabaseHandlerListener {
 
     @Override
     public void enterInsert_into(Insert_intoContext ctx) {
+        System.out.println("Entering insert_into.");
     }
 
     @Override
     public void exitInsert_into(Insert_intoContext ctx) {
+        System.out.println("Exiting insert_into.");
         service.insertIntoByContext(ctx);
     }
 
     @Override
     public void enterValue(ValueContext ctx) {
-        // TODO Auto-generated method stub
 
     }
 

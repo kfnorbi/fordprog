@@ -8,6 +8,12 @@ public class DatabaseTable extends DatabaseElement {
 
     private List<DatabaseTableColumnDescriptor> columns;
 
+    private Integer rows;
+
+    public DatabaseTable() {
+        rows = 0;
+    }
+
     public String getName() {
         return name;
     }
@@ -30,9 +36,25 @@ public class DatabaseTable extends DatabaseElement {
         }).findFirst().orElse(null);
     }
 
+    public DatabaseTableColumnDescriptor getColumnByName(String columnName) {
+        return columns.stream().filter(p -> p.getColumnName().equals(columnName)).findFirst().get();
+    }
+
     @Override
     public String toString() {
         return "DatabaseTable [name=" + name + ", columns=" + columns + "]";
+    }
+
+    public Integer getRows() {
+        return rows;
+    }
+
+    public void setRows(Integer rows) {
+        this.rows = rows;
+    }
+
+    public void incrementRow() {
+        rows++;
     }
 
 }
