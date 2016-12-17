@@ -67,8 +67,7 @@ public class DatabaseSelectResult {
                         found = true;
                     }
                     if (found) {
-                        builder.append(DELIMITER + insertEscape(databaseData.getValue(), columnName)
-                                + databaseData.getValue() + DELIMITER);
+                        builder.append(createDisplayData(columnName, databaseData));
                         break;
                     }
                 }
@@ -82,9 +81,8 @@ public class DatabaseSelectResult {
         return builder.toString();
     }
 
-    private String buildDataString(List<DatabaseTableColumnDescriptor> columnList, int i, DatabaseData data) {
-        return DELIMITER + insertEscape(data.getValue(), columnList.get(i).getColumnName()) + data.getValue()
-                + DELIMITER;
+    private String createDisplayData(String columnName, DatabaseData databaseData) {
+        return DELIMITER + insertEscape(databaseData.getValue(), columnName) + databaseData.getValue() + DELIMITER;
     }
 
     private String formatColumnName(DatabaseTableColumnDescriptor column) {

@@ -7,15 +7,28 @@ import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerLexer;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser;
 import hu.unideb.inf.fordprog.parser.DatabaseHandlerListenerImpl;
 
+/**
+ * Az adatbázis interpretere.
+ *
+ */
 public final class DatabaseInterpreter {
 
-    public static void interpret(String command) {
-        DatabaseHandlerLexer lexer = new DatabaseHandlerLexer(new ANTLRInputStream(command));
-        DatabaseHandlerParser parser = new DatabaseHandlerParser(new CommonTokenStream(lexer));
+    private DatabaseInterpreter() {
+    }
+
+    /**
+     * Parancs interpretálása.
+     *
+     * @param command
+     *            a parancs.
+     */
+    public static void interpret(final String command) {
+        final DatabaseHandlerLexer lexer = new DatabaseHandlerLexer(new ANTLRInputStream(command));
+        final DatabaseHandlerParser parser = new DatabaseHandlerParser(new CommonTokenStream(lexer));
         parser.addParseListener(new DatabaseHandlerListenerImpl());
         parser.sql_statement();
-        int numberOfSyntaxErrors = parser.getNumberOfSyntaxErrors();
-        if (numberOfSyntaxErrors > 0) {
+        int numberOfErrors = parser.getNumberOfSyntaxErrors();
+        if (numberOfErrors > 0) {
             throw new RuntimeException("Syntax error!");
         }
     }

@@ -11,20 +11,32 @@ import hu.unideb.inf.fordprog.model.DatabaseSelectResult;
  */
 public class DatabaseServiceFacade implements DatabaseService {
 
-    DatabaseService service = new DatabaseServiceImpl();
+    /**
+     * Szolgáltatás.
+     */
+    private final DatabaseService service = new DatabaseServiceImpl();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void createTableByContext(CreateTableContext ctx) {
+    public void createTableByContext(final CreateTableContext ctx) {
         service.createTableByContext(ctx);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void insertIntoByContext(InsertIntoContext ctx) {
+    public void insertIntoByContext(final InsertIntoContext ctx) {
         service.insertIntoByContext(ctx);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public DatabaseSelectResult selectByContext(SelectContext ctx) {
+    public DatabaseSelectResult selectByContext(final SelectContext ctx) {
         return service.selectByContext(ctx);
     }
 
