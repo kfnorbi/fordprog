@@ -1,11 +1,16 @@
 package hu.unideb.inf.fordprog.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,13 +69,19 @@ public final class Database {
     }
 
     public static DatabaseTableColumnType getTableColumnTypeByTableAndColumnName(String tableName, String columnName) {
-        if (getTableByName(tableName) == null)
-            throw new TableDoesNotExistsException("Table does not exists.");
+        isTableExists(tableName);
         Optional<Optional<DatabaseTableColumnDescriptor>> findFirst = tables.stream()
                 .filter(p -> p.getName().equals(tableName))
                 .map(p -> p.getColumns().stream().filter(c -> c.getColumnName().equals(columnName)).findFirst())
                 .findFirst();
         return findFirst.get().get().getType();
+    }
+
+    public static boolean isTableExists(String tableName) {
+        if (getTableByName(tableName) == null)
+            throw new TableDoesNotExistsException("Table does not exists.");
+        else
+            return true;
     }
 
     public static boolean isColumnExistsInTable(String tableName, String columnName) {
@@ -80,7 +91,7 @@ public final class Database {
                 tableByName.getColumnByName(columnName);
             } catch (NoSuchElementException e) {
                 throw new ColumnDoesNotExistsException(
-                        "Column," + columnName + " does not exists in table:" + tableName);
+                        "Column " + columnName + " does not exists in table:" + tableName);
             }
         }
         return true;
@@ -90,9 +101,24 @@ public final class Database {
         return data.get(tableName);
     }
 
+    public static Set<DatabaseTableColumnDescriptor> getColumnsOrderedFromTable(String tableName) {
+        DatabaseTable table = getTableByName(tableName);
+        Supplier<TreeSet<DatabaseTableColumnDescriptor>> supplier = () -> new TreeSet<DatabaseTableColumnDescriptor>();
+        return table.getColumns().stream().collect(Collectors.toCollection(supplier));
+    }
+
     public static void clearDatabase() {
         data = new HashMap<>();
         tables = new ArrayList<>();
+    }
+
+    static class IndexComparator implements Comparator<Integer> {
+
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return o1.compareTo(o2);
+        }
+
     }
 
 }

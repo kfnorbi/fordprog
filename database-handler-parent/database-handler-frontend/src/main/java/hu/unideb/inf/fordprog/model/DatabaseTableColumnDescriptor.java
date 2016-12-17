@@ -1,10 +1,22 @@
 package hu.unideb.inf.fordprog.model;
 
-public class DatabaseTableColumnDescriptor extends DatabaseElement {
+public class DatabaseTableColumnDescriptor extends DatabaseElement implements Comparable<DatabaseTableColumnDescriptor>{
+
+    private Integer index;
 
     private String columnName;
 
     private DatabaseTableColumnType type;
+
+    public DatabaseTableColumnDescriptor() {
+    }
+
+    public DatabaseTableColumnDescriptor(Integer index, String columnName, DatabaseTableColumnType type) {
+        super();
+        this.index = index;
+        this.columnName = columnName;
+        this.type = type;
+    }
 
     public DatabaseTableColumnType getType() {
         return type;
@@ -24,7 +36,20 @@ public class DatabaseTableColumnDescriptor extends DatabaseElement {
 
     @Override
     public String toString() {
-        return "DatabaseTableColumnDescriptor [columnName=" + columnName + ", type=" + type + "]";
+        return "DatabaseTableColumnDescriptor [index=" + index + ", columnName=" + columnName + ", type=" + type + "]";
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    @Override
+    public int compareTo(DatabaseTableColumnDescriptor o) {
+        return this.getIndex().compareTo(o.getIndex());
     }
 
 }

@@ -20,25 +20,41 @@ public interface DatabaseHandlerListener extends ParseTreeListener {
 	 */
 	void exitSql_statement(DatabaseHandlerParser.Sql_statementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DatabaseHandlerParser#create_table}.
+	 * Enter a parse tree produced by the {@code createTable}
+	 * labeled alternative in {@link DatabaseHandlerParser#create_table}.
 	 * @param ctx the parse tree
 	 */
-	void enterCreate_table(DatabaseHandlerParser.Create_tableContext ctx);
+	void enterCreateTable(DatabaseHandlerParser.CreateTableContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DatabaseHandlerParser#create_table}.
+	 * Exit a parse tree produced by the {@code createTable}
+	 * labeled alternative in {@link DatabaseHandlerParser#create_table}.
 	 * @param ctx the parse tree
 	 */
-	void exitCreate_table(DatabaseHandlerParser.Create_tableContext ctx);
+	void exitCreateTable(DatabaseHandlerParser.CreateTableContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DatabaseHandlerParser#insert_into}.
+	 * Enter a parse tree produced by the {@code insertInto}
+	 * labeled alternative in {@link DatabaseHandlerParser#insert_into}.
 	 * @param ctx the parse tree
 	 */
-	void enterInsert_into(DatabaseHandlerParser.Insert_intoContext ctx);
+	void enterInsertInto(DatabaseHandlerParser.InsertIntoContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DatabaseHandlerParser#insert_into}.
+	 * Exit a parse tree produced by the {@code insertInto}
+	 * labeled alternative in {@link DatabaseHandlerParser#insert_into}.
 	 * @param ctx the parse tree
 	 */
-	void exitInsert_into(DatabaseHandlerParser.Insert_intoContext ctx);
+	void exitInsertInto(DatabaseHandlerParser.InsertIntoContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code select}
+	 * labeled alternative in {@link DatabaseHandlerParser#select_clause}.
+	 * @param ctx the parse tree
+	 */
+	void enterSelect(DatabaseHandlerParser.SelectContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code select}
+	 * labeled alternative in {@link DatabaseHandlerParser#select_clause}.
+	 * @param ctx the parse tree
+	 */
+	void exitSelect(DatabaseHandlerParser.SelectContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DatabaseHandlerParser#column_definition}.
 	 * @param ctx the parse tree
@@ -50,35 +66,61 @@ public interface DatabaseHandlerListener extends ParseTreeListener {
 	 */
 	void exitColumn_definition(DatabaseHandlerParser.Column_definitionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DatabaseHandlerParser#table_name}.
+	 * Enter a parse tree produced by {@link DatabaseHandlerParser#column_list}.
 	 * @param ctx the parse tree
 	 */
-	void enterTable_name(DatabaseHandlerParser.Table_nameContext ctx);
+	void enterColumn_list(DatabaseHandlerParser.Column_listContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DatabaseHandlerParser#table_name}.
+	 * Exit a parse tree produced by {@link DatabaseHandlerParser#column_list}.
 	 * @param ctx the parse tree
 	 */
-	void exitTable_name(DatabaseHandlerParser.Table_nameContext ctx);
+	void exitColumn_list(DatabaseHandlerParser.Column_listContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DatabaseHandlerParser#column_name}.
+	 * Enter a parse tree produced by {@link DatabaseHandlerParser#column_list_type}.
 	 * @param ctx the parse tree
 	 */
-	void enterColumn_name(DatabaseHandlerParser.Column_nameContext ctx);
+	void enterColumn_list_type(DatabaseHandlerParser.Column_list_typeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DatabaseHandlerParser#column_name}.
+	 * Exit a parse tree produced by {@link DatabaseHandlerParser#column_list_type}.
 	 * @param ctx the parse tree
 	 */
-	void exitColumn_name(DatabaseHandlerParser.Column_nameContext ctx);
+	void exitColumn_list_type(DatabaseHandlerParser.Column_list_typeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DatabaseHandlerParser#insert_column_definition}.
+	 * Enter a parse tree produced by the {@code tableName}
+	 * labeled alternative in {@link DatabaseHandlerParser#table_name}.
 	 * @param ctx the parse tree
 	 */
-	void enterInsert_column_definition(DatabaseHandlerParser.Insert_column_definitionContext ctx);
+	void enterTableName(DatabaseHandlerParser.TableNameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DatabaseHandlerParser#insert_column_definition}.
+	 * Exit a parse tree produced by the {@code tableName}
+	 * labeled alternative in {@link DatabaseHandlerParser#table_name}.
 	 * @param ctx the parse tree
 	 */
-	void exitInsert_column_definition(DatabaseHandlerParser.Insert_column_definitionContext ctx);
+	void exitTableName(DatabaseHandlerParser.TableNameContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code columnName}
+	 * labeled alternative in {@link DatabaseHandlerParser#column_name}.
+	 * @param ctx the parse tree
+	 */
+	void enterColumnName(DatabaseHandlerParser.ColumnNameContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code columnName}
+	 * labeled alternative in {@link DatabaseHandlerParser#column_name}.
+	 * @param ctx the parse tree
+	 */
+	void exitColumnName(DatabaseHandlerParser.ColumnNameContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code insertColumnDefinition}
+	 * labeled alternative in {@link DatabaseHandlerParser#insert_column_definition}.
+	 * @param ctx the parse tree
+	 */
+	void enterInsertColumnDefinition(DatabaseHandlerParser.InsertColumnDefinitionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code insertColumnDefinition}
+	 * labeled alternative in {@link DatabaseHandlerParser#insert_column_definition}.
+	 * @param ctx the parse tree
+	 */
+	void exitInsertColumnDefinition(DatabaseHandlerParser.InsertColumnDefinitionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DatabaseHandlerParser#value}.
 	 * @param ctx the parse tree

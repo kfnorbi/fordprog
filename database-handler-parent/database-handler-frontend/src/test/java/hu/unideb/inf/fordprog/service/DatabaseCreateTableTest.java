@@ -10,9 +10,13 @@ import hu.unideb.inf.fordprog.error.ArgumentNumberException;
 import hu.unideb.inf.fordprog.error.ColumnDoesNotExistsException;
 import hu.unideb.inf.fordprog.error.ColumnTypeException;
 import hu.unideb.inf.fordprog.error.TableAlreadyExistsException;
+import hu.unideb.inf.fordprog.error.TableDoesNotExistsException;
 import hu.unideb.inf.fordprog.interpreter.DatabaseInterpreter;
 import hu.unideb.inf.fordprog.model.Database;
+import hu.unideb.inf.fordprog.model.DatabaseData;
 import hu.unideb.inf.fordprog.model.DatabaseRecord;
+import hu.unideb.inf.fordprog.model.DatabaseSelectCache;
+import hu.unideb.inf.fordprog.model.DatabaseSelectResult;
 import hu.unideb.inf.fordprog.model.DatabaseTable;
 import hu.unideb.inf.fordprog.model.DatabaseTableColumnDescriptor;
 import hu.unideb.inf.fordprog.model.DatabaseTableColumnType;
@@ -27,6 +31,7 @@ public class DatabaseCreateTableTest {
     @Before
     public void setUp() throws Exception {
         Database.clearDatabase();
+        DatabaseSelectCache.resetCache();
     }
 
     @Test
@@ -101,6 +106,28 @@ public class DatabaseCreateTableTest {
     public void testColumnDoesNotExists() {
         DatabaseInterpreter.interpret("create table test {id number, name varchar, dateOfBirth date};");
         DatabaseInterpreter.interpret("insert into test (id,password) values (1,'password');");
+    }
+
+    @Test(expected = TableDoesNotExistsException.class)
+    public void testInsertIntoTableWhichDoesNotExists() {
+        DatabaseInterpreter.interpret("insert into test (id,password) values (1,'password');");
+    }
+
+    @Test
+    public void testSelect() {
+        DatabaseInterpreter.interpret("create table test {id number, full_name varchar, dateOfBirth date, payment number};");
+
+        DatabaseInterpreter.interpret("insert into test (id,full_name,dateOfBirth) values (1,'Jani',1995-10-20);");
+        DatabaseData firstId = new DatabaseData("id", DatabaseTableColumnType.NUMBER, "1");
+        DatabaseData firstName = new DatabaseData("name", DatabaseTableColumnType.VARCHAR, "Jani");
+        DatabaseData firstDate = new DatabaseData("dateOfBirth", DatabaseTableColumnType.DATE, "1995-10-20");
+        // DatabaseRecord firstRecord = new
+        // DatabaseRecord(Arrays.asList(firstId, firstName, firstDate));
+        DatabaseInterpreter.interpret("insert into test (id,full_name) values (2,'Lora');");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (3,'Nandor',325.5);");
+        DatabaseInterpreter.interpret("select * from test");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        System.out.println(databaseCache);
     }
 
 }

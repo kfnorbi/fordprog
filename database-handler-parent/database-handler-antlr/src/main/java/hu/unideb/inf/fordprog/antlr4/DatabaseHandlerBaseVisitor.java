@@ -26,14 +26,21 @@ public class DatabaseHandlerBaseVisitor<T> extends AbstractParseTreeVisitor<T> i
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitCreate_table(DatabaseHandlerParser.Create_tableContext ctx) { return visitChildren(ctx); }
+	@Override public T visitCreateTable(DatabaseHandlerParser.CreateTableContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitInsert_into(DatabaseHandlerParser.Insert_intoContext ctx) { return visitChildren(ctx); }
+	@Override public T visitInsertInto(DatabaseHandlerParser.InsertIntoContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitSelect(DatabaseHandlerParser.SelectContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -47,21 +54,35 @@ public class DatabaseHandlerBaseVisitor<T> extends AbstractParseTreeVisitor<T> i
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitTable_name(DatabaseHandlerParser.Table_nameContext ctx) { return visitChildren(ctx); }
+	@Override public T visitColumn_list(DatabaseHandlerParser.Column_listContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitColumn_name(DatabaseHandlerParser.Column_nameContext ctx) { return visitChildren(ctx); }
+	@Override public T visitColumn_list_type(DatabaseHandlerParser.Column_list_typeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitInsert_column_definition(DatabaseHandlerParser.Insert_column_definitionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitTableName(DatabaseHandlerParser.TableNameContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitColumnName(DatabaseHandlerParser.ColumnNameContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitInsertColumnDefinition(DatabaseHandlerParser.InsertColumnDefinitionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
