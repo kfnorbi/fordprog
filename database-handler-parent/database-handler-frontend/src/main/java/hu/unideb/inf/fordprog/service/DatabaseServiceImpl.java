@@ -1,8 +1,5 @@
 package hu.unideb.inf.fordprog.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.CreateTableContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.InsertIntoContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.SelectContext;
@@ -46,6 +43,18 @@ public class DatabaseServiceImpl implements DatabaseService {
     @Override
     public DatabaseSelectResult selectByContext(SelectContext ctx) {
         return selectOperationService.selectByContext(ctx);
+    }
+
+    public TableOperationService getTableService() {
+        return tableService;
+    }
+
+    public InsertOperationService getInsertService() {
+        return insertService;
+    }
+
+    public SelectOperationService getSelectOperationService() {
+        return selectOperationService;
     }
 
 }

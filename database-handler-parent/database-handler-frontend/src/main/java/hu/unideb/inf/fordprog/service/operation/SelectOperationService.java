@@ -3,7 +3,6 @@ package hu.unideb.inf.fordprog.service.operation;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Column_listContext;
@@ -30,38 +29,74 @@ public class SelectOperationService extends AbstractOperationService {
      */
     public DatabaseSelectResult selectByContext(final SelectContext ctx) {
         final List<Column_listContext> columns = ctx.columns;
-        final DatabaseSelectResult selectResult = new DatabaseSelectResult();
         final String tableName = ctx.tableName.getText();
+        DatabaseSelectResult selectResult;
         final List<DatabaseRecord> dataFromTable = Database.getDataFromTable(tableName);
-        Set<DatabaseTableColumnDescriptor> columnsFromTable;
-
         if (isAsterixColumn(columns)) {
-            columnsFromTable = Database.getColumnsOrderedFromTable(tableName);
-            final List<List<DatabaseData>> collect = dataFromTable.stream().map(p -> p.getData())
-                    .collect(Collectors.toList());
-            selectResult.setColumns(columnsFromTable);
-            collect.stream().forEach(dataList -> selectResult.add(new DatabaseSelectRecord(dataList)));
+            selectResult = selectAllColumns(tableName, dataFromTable);
         } else {
-            Set<String> requiredColumns = columns.stream().distinct().map(p -> p.columName.getText())
-                    .collect(Collectors.toSet());
-            Integer rowIndex = 1;
-            for (DatabaseRecord record : dataFromTable) {
-                DatabaseSelectRecord databaseSelectRecord = new DatabaseSelectRecord();
-                for (DatabaseData data : record.getData()) {
-                    if (requiredColumns.contains(data.getColumnName())) {
-                        databaseSelectRecord.add(data);
-                    }
-                }
-                selectResult.add(databaseSelectRecord);
-            }
-            Set<DatabaseTableColumnDescriptor> resultColumns = new HashSet<>();
-            for (String string : requiredColumns) {
-                resultColumns.add(toDatabaseTableColumnDesciptor(string, rowIndex++));
-            }
-            selectResult.setColumns(resultColumns);
+            checkIfEveryColumnExistsInTable(columns, tableName);
+            selectResult = selectWithSpecifiedColumns(columns, dataFromTable);
         }
-
         return selectResult;
+    }
+
+    private void checkIfEveryColumnExistsInTable(final List<Column_listContext> columns, final String tableName) {
+        for (Column_listContext column : columns) {
+            Database.isColumnExistsInTable(tableName, column.columName.getText());
+        }
+    }
+
+    private DatabaseSelectResult selectWithSpecifiedColumns(final List<Column_listContext> columns,
+            final List<DatabaseRecord> dataFromTable) {
+        DatabaseSelectResult selectResult = new DatabaseSelectResult();
+        Set<String> requiredColumns = getRequiredColumnsAsStringSet(columns);
+        for (DatabaseRecord record : dataFromTable) {
+            selectResult.add(createDatabaseSelectRecord(requiredColumns, record));
+        }
+        Set<DatabaseTableColumnDescriptor> resultColumns = createRequiredColumns(requiredColumns);
+        selectResult.setColumns(resultColumns);
+        return selectResult;
+    }
+
+    private Set<String> getRequiredColumnsAsStringSet(final List<Column_listContext> columns) {
+        return columns.stream().distinct().map(p -> p.columName.getText()).collect(Collectors.toSet());
+    }
+
+    private DatabaseSelectRecord createDatabaseSelectRecord(Set<String> requiredColumns, DatabaseRecord record) {
+        DatabaseSelectRecord databaseSelectRecord = new DatabaseSelectRecord();
+        for (DatabaseData data : record.getData()) {
+            if (isColumnInRequiredColumns(requiredColumns, data)) {
+                databaseSelectRecord.add(data);
+            }
+        }
+        return databaseSelectRecord;
+    }
+
+    private Set<DatabaseTableColumnDescriptor> createRequiredColumns(Set<String> requiredColumns) {
+        Set<DatabaseTableColumnDescriptor> resultColumns = new HashSet<>();
+        Integer rowIndex = 1;
+        for (String string : requiredColumns) {
+            resultColumns.add(toDatabaseTableColumnDesciptor(string, rowIndex++));
+        }
+        return resultColumns;
+    }
+
+    private boolean isColumnInRequiredColumns(Set<String> requiredColumns, DatabaseData data) {
+        return requiredColumns.contains(data.getColumnName());
+    }
+
+    private DatabaseSelectResult selectAllColumns(final String tableName, final List<DatabaseRecord> dataFromTable) {
+        DatabaseSelectResult selectResult = new DatabaseSelectResult();
+        Set<DatabaseTableColumnDescriptor> columnsFromTable = Database.getColumnsOrderedFromTable(tableName);
+        final List<List<DatabaseData>> data = mapDataFromTableToList(dataFromTable);
+        selectResult.setColumns(columnsFromTable);
+        data.stream().forEach(dataList -> selectResult.add(new DatabaseSelectRecord(dataList)));
+        return selectResult;
+    }
+
+    private List<List<DatabaseData>> mapDataFromTableToList(final List<DatabaseRecord> dataFromTable) {
+        return dataFromTable.stream().map(p -> p.getData()).collect(Collectors.toList());
     }
 
     private DatabaseTableColumnDescriptor toDatabaseTableColumnDesciptor(String columnName, Integer index) {

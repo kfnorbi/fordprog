@@ -172,6 +172,7 @@ public final class Database {
      * @return a táblában szereplő adatok listája.
      */
     public static List<DatabaseRecord> getDataFromTable(final String tableName) {
+        isTableExists(tableName);
         return data.get(tableName);
     }
 

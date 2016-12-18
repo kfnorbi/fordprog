@@ -40,4 +40,8 @@ public class DatabaseServiceFacade implements DatabaseService {
         return service.selectByContext(ctx);
     }
 
+    public DatabaseService getService() {
+        return service;
+    }
+
 }
