@@ -19,6 +19,8 @@ import hu.unideb.inf.fordprog.model.DatabaseTableColumnDescriptor;
  */
 public class DisplayService {
 
+    private static final Integer DEFAULT_DISPLAY_LENGTH = 15;
+
     private static final String NULL = "NULL";
 
     private static final String DELIMITER = "|";
@@ -53,12 +55,12 @@ public class DisplayService {
                         found = true;
                     }
                     if (found) {
-                        builder.append(createDisplayData(columnName, databaseData));
+                        builder.append(createDisplayData(databaseData));
                         break;
                     }
                 }
                 if (!found) {
-                    builder.append(buildNull(columnName));
+                    builder.append(buildNull());
                 }
 
             }
@@ -67,20 +69,20 @@ public class DisplayService {
         return builder.toString();
     }
 
-    private String createDisplayData(String columnName, DatabaseData databaseData) {
-        return DELIMITER + insertEscape(databaseData.getValue(), columnName) + databaseData.getValue() + DELIMITER;
+    private String createDisplayData(DatabaseData databaseData) {
+        return DELIMITER + insertEscape(databaseData.getValue()) + databaseData.getValue() + DELIMITER;
     }
 
     private String formatColumnName(DatabaseTableColumnDescriptor column) {
-        return DELIMITER + column.getColumnName() + DELIMITER;
+        return DELIMITER + insertEscape(column.getColumnName()) + column.getColumnName() + DELIMITER;
     }
 
-    private String buildNull(String columnName) {
-        return DELIMITER + insertEscape(NULL, columnName) + NULL + DELIMITER;
+    private String buildNull() {
+        return DELIMITER + insertEscape(NULL) + NULL + DELIMITER;
     }
 
-    private String insertEscape(String value, String columnName) {
-        int size = columnName.length() - value.length();
+    private String insertEscape(String value) {
+        int size = DEFAULT_DISPLAY_LENGTH - value.length();
         StringBuilder builder = new StringBuilder();
         if (size > 0) {
             for (int i = 0; i < size; i++) {
