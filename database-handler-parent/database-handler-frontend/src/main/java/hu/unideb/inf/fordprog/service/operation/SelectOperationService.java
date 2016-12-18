@@ -3,6 +3,7 @@ package hu.unideb.inf.fordprog.service.operation;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Column_listContext;
@@ -50,7 +51,7 @@ public class SelectOperationService extends AbstractOperationService {
     private DatabaseSelectResult selectWithSpecifiedColumns(final List<Column_listContext> columns,
             final List<DatabaseRecord> dataFromTable) {
         DatabaseSelectResult selectResult = new DatabaseSelectResult();
-        Set<String> requiredColumns = getRequiredColumnsAsStringSet(columns);
+        List<String> requiredColumns = getRequiredColumnsAsStringSet(columns);
         for (DatabaseRecord record : dataFromTable) {
             selectResult.add(createDatabaseSelectRecord(requiredColumns, record));
         }
@@ -59,11 +60,11 @@ public class SelectOperationService extends AbstractOperationService {
         return selectResult;
     }
 
-    private Set<String> getRequiredColumnsAsStringSet(final List<Column_listContext> columns) {
-        return columns.stream().distinct().map(p -> p.columName.getText()).collect(Collectors.toSet());
+    private List<String> getRequiredColumnsAsStringSet(final List<Column_listContext> columns) {
+        return columns.stream().distinct().map(p -> p.columName.getText()).collect(Collectors.toList());
     }
 
-    private DatabaseSelectRecord createDatabaseSelectRecord(Set<String> requiredColumns, DatabaseRecord record) {
+    private DatabaseSelectRecord createDatabaseSelectRecord(List<String> requiredColumns, DatabaseRecord record) {
         DatabaseSelectRecord databaseSelectRecord = new DatabaseSelectRecord();
         for (DatabaseData data : record.getData()) {
             if (isColumnInRequiredColumns(requiredColumns, data)) {
@@ -73,8 +74,8 @@ public class SelectOperationService extends AbstractOperationService {
         return databaseSelectRecord;
     }
 
-    private Set<DatabaseTableColumnDescriptor> createRequiredColumns(Set<String> requiredColumns) {
-        Set<DatabaseTableColumnDescriptor> resultColumns = new HashSet<>();
+    private Set<DatabaseTableColumnDescriptor> createRequiredColumns(List<String> requiredColumns) {
+        Set<DatabaseTableColumnDescriptor> resultColumns = new TreeSet<DatabaseTableColumnDescriptor>();
         Integer rowIndex = 1;
         for (String string : requiredColumns) {
             resultColumns.add(toDatabaseTableColumnDesciptor(string, rowIndex++));
@@ -82,7 +83,7 @@ public class SelectOperationService extends AbstractOperationService {
         return resultColumns;
     }
 
-    private boolean isColumnInRequiredColumns(Set<String> requiredColumns, DatabaseData data) {
+    private boolean isColumnInRequiredColumns(List<String> requiredColumns, DatabaseData data) {
         return requiredColumns.contains(data.getColumnName());
     }
 

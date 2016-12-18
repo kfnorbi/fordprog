@@ -143,7 +143,7 @@ public class DatabaseCreateTableTest {
                 .interpret("insert into ulyssys (id,feljeszto_neve,dogyness,fame) values (3,'RicsiFiu',0,100);");
         DatabaseInterpreter
                 .interpret("insert into ulyssys (id,feljeszto_neve,dogyness,fame) values (4,'Viktor',0,1000);");
-        DatabaseInterpreter.interpret("select dogyness,id,experience from ulyssys");
+        DatabaseInterpreter.interpret("select experience,feljeszto_neve,dogyness,id,fame from ulyssys");
         displayService.displayResult();
     }
 
