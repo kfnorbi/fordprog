@@ -79,9 +79,59 @@ public interface DatabaseHandlerVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInsertColumnDefinition(DatabaseHandlerParser.InsertColumnDefinitionContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code whereClause}
+	 * labeled alternative in {@link DatabaseHandlerParser#where_clause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhereClause(DatabaseHandlerParser.WhereClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code expressionLabel}
+	 * labeled alternative in {@link DatabaseHandlerParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpressionLabel(DatabaseHandlerParser.ExpressionLabelContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DatabaseHandlerParser#expr_op}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpr_op(DatabaseHandlerParser.Expr_opContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DatabaseHandlerParser#element}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElement(DatabaseHandlerParser.ElementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DatabaseHandlerParser#right_element}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRight_element(DatabaseHandlerParser.Right_elementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DatabaseHandlerParser#left_element}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLeft_element(DatabaseHandlerParser.Left_elementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DatabaseHandlerParser#simple_expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSimple_expression(DatabaseHandlerParser.Simple_expressionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DatabaseHandlerParser#value}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitValue(DatabaseHandlerParser.ValueContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DatabaseHandlerParser#relational_op}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRelational_op(DatabaseHandlerParser.Relational_opContext ctx);
 }

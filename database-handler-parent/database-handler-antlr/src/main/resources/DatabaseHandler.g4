@@ -17,7 +17,7 @@ insert_into
 	: INSERT INTO tableName=table_name LPAR insertColumnDefinition+=insert_column_definition+ RPAR VALUES LPAR value+ RPAR SEMICOLON #insertInto
 	;
 select_clause
-	: SELECT columns+=column_list+ FROM tableName=table_name #select
+	: SELECT columns+=column_list+ FROM tableName=table_name (where=where_clause)? SEMICOLON #select
 	;
 column_definition
 	:  columnName=column_name columnType=COLUMN_TPYE COMA?
@@ -38,9 +38,36 @@ column_name
 insert_column_definition
 	: columnName=column_name COMA? #insertColumnDefinition
 	;
+where_clause
+   : WHERE expression #whereClause
+   ;
+expression
+   : simple_expression ( expr_op simple_expression )* #expressionLabel
+   ;
+expr_op
+   : AND | OR | NOT
+   ;
+element
+   : CHAR | column_name
+   ;
+right_element
+   : element
+   ;
+left_element
+   : element
+   ;
+simple_expression
+   : left=left_element relation=relational_op right=right_element
+   ;
 value
 	: CHAR COMA?
 	;
+relational_op
+   : EQ
+   | NOT_EQ
+   | LTE
+   | GTE
+   ;
 CREATE
 	: 'create' | 'CREATE'
 	;
@@ -71,28 +98,21 @@ AND
 OR
 	:'or' | 'OR' | '||'
 	;
-EQUALS
-	:'='
-	;
-GT
-	:'>'
-	;
-LT
-	:'<'
-	;
-GTE
-	:'>='
-	;
-LTE
-	:'<='
-	;
-OPERATOR
-	: EQUALS
-	| GT
-	| LT
-	| GTE
-	| LTE
-	;
+EQ
+   : '='
+   ;
+LTH
+   : '<'
+   ;
+GTH
+   : '>'
+   ;
+NOT_EQ
+   : '!='
+   ;
+NOT
+   : 'not'
+   ;
 LOGICAL
 	: AND
 	| OR

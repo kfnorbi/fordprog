@@ -122,6 +122,80 @@ public interface DatabaseHandlerListener extends ParseTreeListener {
 	 */
 	void exitInsertColumnDefinition(DatabaseHandlerParser.InsertColumnDefinitionContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code whereClause}
+	 * labeled alternative in {@link DatabaseHandlerParser#where_clause}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhereClause(DatabaseHandlerParser.WhereClauseContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code whereClause}
+	 * labeled alternative in {@link DatabaseHandlerParser#where_clause}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhereClause(DatabaseHandlerParser.WhereClauseContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code expressionLabel}
+	 * labeled alternative in {@link DatabaseHandlerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpressionLabel(DatabaseHandlerParser.ExpressionLabelContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code expressionLabel}
+	 * labeled alternative in {@link DatabaseHandlerParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpressionLabel(DatabaseHandlerParser.ExpressionLabelContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DatabaseHandlerParser#expr_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterExpr_op(DatabaseHandlerParser.Expr_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DatabaseHandlerParser#expr_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitExpr_op(DatabaseHandlerParser.Expr_opContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DatabaseHandlerParser#element}.
+	 * @param ctx the parse tree
+	 */
+	void enterElement(DatabaseHandlerParser.ElementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DatabaseHandlerParser#element}.
+	 * @param ctx the parse tree
+	 */
+	void exitElement(DatabaseHandlerParser.ElementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DatabaseHandlerParser#right_element}.
+	 * @param ctx the parse tree
+	 */
+	void enterRight_element(DatabaseHandlerParser.Right_elementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DatabaseHandlerParser#right_element}.
+	 * @param ctx the parse tree
+	 */
+	void exitRight_element(DatabaseHandlerParser.Right_elementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DatabaseHandlerParser#left_element}.
+	 * @param ctx the parse tree
+	 */
+	void enterLeft_element(DatabaseHandlerParser.Left_elementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DatabaseHandlerParser#left_element}.
+	 * @param ctx the parse tree
+	 */
+	void exitLeft_element(DatabaseHandlerParser.Left_elementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DatabaseHandlerParser#simple_expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterSimple_expression(DatabaseHandlerParser.Simple_expressionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DatabaseHandlerParser#simple_expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitSimple_expression(DatabaseHandlerParser.Simple_expressionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DatabaseHandlerParser#value}.
 	 * @param ctx the parse tree
 	 */
@@ -131,4 +205,14 @@ public interface DatabaseHandlerListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitValue(DatabaseHandlerParser.ValueContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DatabaseHandlerParser#relational_op}.
+	 * @param ctx the parse tree
+	 */
+	void enterRelational_op(DatabaseHandlerParser.Relational_opContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DatabaseHandlerParser#relational_op}.
+	 * @param ctx the parse tree
+	 */
+	void exitRelational_op(DatabaseHandlerParser.Relational_opContext ctx);
 }

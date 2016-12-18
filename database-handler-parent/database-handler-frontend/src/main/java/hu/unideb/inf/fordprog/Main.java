@@ -29,7 +29,9 @@ public final class Main {
         final Scanner inputScanner = new Scanner(System.in);
         while (inputScanner.hasNext()) {
             try {
-                DatabaseInterpreter.interpret(inputScanner.next());
+                String next = inputScanner.nextLine();
+                System.out.println(next);
+                DatabaseInterpreter.interpret(next);
             } catch (SyntaxErrorException e) {
                 LOGGER.error("Error", e);
             }

@@ -3,6 +3,7 @@ package hu.unideb.inf.fordprog.service;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.CreateTableContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.InsertIntoContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.SelectContext;
+import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.WhereClauseContext;
 import hu.unideb.inf.fordprog.model.DatabaseSelectResult;
 
 /**
@@ -36,4 +37,12 @@ public interface DatabaseService {
      * @return a lekérdezés eredménye.
      */
     DatabaseSelectResult selectByContext(SelectContext ctx);
+
+    /**
+     *
+     * @param ctx
+     * @param selectResult
+     * @return
+     */
+    DatabaseSelectResult filterResultByWhereContext(WhereClauseContext ctx, DatabaseSelectResult selectResult);
 }

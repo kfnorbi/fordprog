@@ -126,25 +126,23 @@ public class DatabaseCreateTableTest {
         // DatabaseRecord firstRecord = new
         // DatabaseRecord(Arrays.asList(firstId, firstName, firstDate));
         DatabaseInterpreter.interpret("insert into test (id,full_name) values (2,'Lora');");
-        DatabaseInterpreter.interpret("select * from test");
-        displayService.displayResult();
+        DatabaseInterpreter.interpret("select * from test;");
     }
 
     // FOR FUN
     @Test
     public void testInsertUlyssysTeam() {
-        DatabaseInterpreter
-                .interpret("create table ulyssys {id number, feljeszto_neve varchar, dogyness number, fame number,experience number};");
-        DatabaseInterpreter
-                .interpret("insert into ulyssys (id,feljeszto_neve,dogyness,fame,experience) values (1,'SzasziUr',100,66,50);");
+        DatabaseInterpreter.interpret(
+                "create table ulyssys {id number, feljeszto_neve varchar, dogyness number, fame number,experience number};");
+        DatabaseInterpreter.interpret(
+                "insert into ulyssys (id,feljeszto_neve,dogyness,fame,experience) values (1,'SzasziUr',100,66,50);");
         DatabaseInterpreter
                 .interpret("insert into ulyssys (id,feljeszto_neve,dogyness,fame) values (2,'Mark',100,99);");
         DatabaseInterpreter
                 .interpret("insert into ulyssys (id,feljeszto_neve,dogyness,fame) values (3,'RicsiFiu',0,100);");
         DatabaseInterpreter
                 .interpret("insert into ulyssys (id,feljeszto_neve,dogyness,fame) values (4,'Viktor',0,1000);");
-        DatabaseInterpreter.interpret("select experience,feljeszto_neve,dogyness,id,fame from ulyssys");
-        displayService.displayResult();
+        DatabaseInterpreter.interpret("select experience,feljeszto_neve,dogyness,id,fame from ulyssys;");
     }
 
     @Test
@@ -154,8 +152,19 @@ public class DatabaseCreateTableTest {
         DatabaseInterpreter.interpret("insert into test (id,full_name,dateOfBirth) values (1,'Jani',1995-10-20);");
         DatabaseInterpreter.interpret("insert into test (id,full_name) values (2,'Lora');");
         DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (3,'Nandor',325.5);");
-        DatabaseInterpreter.interpret("select payment,full_name,id from test");
-        displayService.displayResult();
+        DatabaseInterpreter.interpret("select payment,full_name,id from test;");
+    }
+
+    @Test
+    public void testSelectWithWhereClause() {
+        DatabaseInterpreter
+                .interpret("create table test {id number, full_name varchar, dateOfBirth date, payment number};");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,dateOfBirth) values (1,'Jani',1995-10-20);");
+        DatabaseInterpreter.interpret("insert into test (id,full_name) values (2,'Lora');");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (3,'Nandor',325.5);");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (4,'Nolbi',10);");
+        DatabaseInterpreter.interpret("select payment,full_name,id from test where payment = 10;");
+        Assert.assertEquals(1, DatabaseSelectCache.getDatabaseCache().getSelectRecords().size());
     }
 
 }
