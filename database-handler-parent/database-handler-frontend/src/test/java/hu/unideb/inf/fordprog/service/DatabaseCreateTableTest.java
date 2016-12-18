@@ -165,6 +165,8 @@ public class DatabaseCreateTableTest {
         DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (4,'Nolbi',10);");
         DatabaseInterpreter.interpret("select payment,full_name,id from test where payment = 10;");
         Assert.assertEquals(1, DatabaseSelectCache.getDatabaseCache().getSelectRecords().size());
+        DatabaseInterpreter.interpret("select payment,full_name,id from test where payment > 10;");
+        Assert.assertEquals(1, DatabaseSelectCache.getDatabaseCache().getSelectRecords().size());
     }
 
 }

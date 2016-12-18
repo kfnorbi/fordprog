@@ -20,9 +20,9 @@ public class DatabaseHandlerParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		CREATE=1, TABLE=2, INSERT=3, INTO=4, VALUES=5, SELECT=6, FROM=7, WHERE=8, 
-		AND=9, OR=10, EQ=11, LTH=12, GTH=13, NOT_EQ=14, NOT=15, LOGICAL=16, COLUMN_TPYE=17, 
-		LKPAR=18, RKPAR=19, LPAR=20, RPAR=21, SEMICOLON=22, COMA=23, ASTERIX=24, 
-		ID=25, CHAR=26, WS=27, LTE=28, GTE=29;
+		AND=9, OR=10, EQ=11, LTH=12, GTH=13, LTE=14, GTE=15, NOT_EQ=16, NOT=17, 
+		LOGICAL=18, COLUMN_TPYE=19, LKPAR=20, RKPAR=21, LPAR=22, RPAR=23, SEMICOLON=24, 
+		COMA=25, ASTERIX=26, ID=27, CHAR=28, WS=29;
 	public static final int
 		RULE_sql_statement = 0, RULE_create_table = 1, RULE_insert_into = 2, RULE_select_clause = 3, 
 		RULE_column_definition = 4, RULE_column_list = 5, RULE_column_list_type = 6, 
@@ -39,14 +39,14 @@ public class DatabaseHandlerParser extends Parser {
 
 	private static final String[] _LITERAL_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, "'='", 
-		"'<'", "'>'", "'!='", "'not'", null, null, "'{'", "'}'", "'('", "')'", 
-		"';'", "','", "'*'"
+		"'<'", "'>'", "'<='", "'>='", "'!='", "'not'", null, null, "'{'", "'}'", 
+		"'('", "')'", "';'", "','", "'*'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, "CREATE", "TABLE", "INSERT", "INTO", "VALUES", "SELECT", "FROM", 
-		"WHERE", "AND", "OR", "EQ", "LTH", "GTH", "NOT_EQ", "NOT", "LOGICAL", 
-		"COLUMN_TPYE", "LKPAR", "RKPAR", "LPAR", "RPAR", "SEMICOLON", "COMA", 
-		"ASTERIX", "ID", "CHAR", "WS", "LTE", "GTE"
+		"WHERE", "AND", "OR", "EQ", "LTH", "GTH", "LTE", "GTE", "NOT_EQ", "NOT", 
+		"LOGICAL", "COLUMN_TPYE", "LKPAR", "RKPAR", "LPAR", "RPAR", "SEMICOLON", 
+		"COMA", "ASTERIX", "ID", "CHAR", "WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -1316,6 +1316,8 @@ public class DatabaseHandlerParser extends Parser {
 		public TerminalNode NOT_EQ() { return getToken(DatabaseHandlerParser.NOT_EQ, 0); }
 		public TerminalNode LTE() { return getToken(DatabaseHandlerParser.LTE, 0); }
 		public TerminalNode GTE() { return getToken(DatabaseHandlerParser.GTE, 0); }
+		public TerminalNode LTH() { return getToken(DatabaseHandlerParser.LTH, 0); }
+		public TerminalNode GTH() { return getToken(DatabaseHandlerParser.GTH, 0); }
 		public Relational_opContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1344,7 +1346,7 @@ public class DatabaseHandlerParser extends Parser {
 			{
 			setState(145);
 			_la = _input.LA(1);
-			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EQ) | (1L << NOT_EQ) | (1L << LTE) | (1L << GTE))) != 0)) ) {
+			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EQ) | (1L << LTH) | (1L << GTH) | (1L << LTE) | (1L << GTE) | (1L << NOT_EQ))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			} else {
 				consume();
@@ -1374,32 +1376,32 @@ public class DatabaseHandlerParser extends Parser {
 		"\5\13t\n\13\3\f\3\f\3\f\3\r\3\r\3\r\3\r\7\r}\n\r\f\r\16\r\u0080\13\r\3"+
 		"\16\3\16\3\17\3\17\5\17\u0086\n\17\3\20\3\20\3\21\3\21\3\22\3\22\3\22"+
 		"\3\22\3\23\3\23\5\23\u0092\n\23\3\24\3\24\3\24\2\2\25\2\4\6\b\n\f\16\20"+
-		"\22\24\26\30\32\34\36 \"$&\2\4\4\2\13\f\21\21\5\2\r\r\20\20\36\37\u0092"+
-		"\2+\3\2\2\2\4-\3\2\2\2\69\3\2\2\2\bM\3\2\2\2\nZ\3\2\2\2\f_\3\2\2\2\16"+
-		"e\3\2\2\2\20h\3\2\2\2\22m\3\2\2\2\24q\3\2\2\2\26u\3\2\2\2\30x\3\2\2\2"+
-		"\32\u0081\3\2\2\2\34\u0085\3\2\2\2\36\u0087\3\2\2\2 \u0089\3\2\2\2\"\u008b"+
-		"\3\2\2\2$\u008f\3\2\2\2&\u0093\3\2\2\2(,\5\4\3\2),\5\6\4\2*,\5\b\5\2+"+
-		"(\3\2\2\2+)\3\2\2\2+*\3\2\2\2,\3\3\2\2\2-.\7\3\2\2./\7\4\2\2/\60\5\20"+
-		"\t\2\60\62\7\24\2\2\61\63\5\n\6\2\62\61\3\2\2\2\63\64\3\2\2\2\64\62\3"+
-		"\2\2\2\64\65\3\2\2\2\65\66\3\2\2\2\66\67\7\25\2\2\678\7\30\2\28\5\3\2"+
-		"\2\29:\7\5\2\2:;\7\6\2\2;<\5\20\t\2<>\7\26\2\2=?\5\24\13\2>=\3\2\2\2?"+
-		"@\3\2\2\2@>\3\2\2\2@A\3\2\2\2AB\3\2\2\2BC\7\27\2\2CD\7\7\2\2DF\7\26\2"+
-		"\2EG\5$\23\2FE\3\2\2\2GH\3\2\2\2HF\3\2\2\2HI\3\2\2\2IJ\3\2\2\2JK\7\27"+
-		"\2\2KL\7\30\2\2L\7\3\2\2\2MO\7\b\2\2NP\5\f\7\2ON\3\2\2\2PQ\3\2\2\2QO\3"+
-		"\2\2\2QR\3\2\2\2RS\3\2\2\2ST\7\t\2\2TV\5\20\t\2UW\5\26\f\2VU\3\2\2\2V"+
-		"W\3\2\2\2WX\3\2\2\2XY\7\30\2\2Y\t\3\2\2\2Z[\5\22\n\2[]\7\23\2\2\\^\7\31"+
-		"\2\2]\\\3\2\2\2]^\3\2\2\2^\13\3\2\2\2_a\5\16\b\2`b\7\31\2\2a`\3\2\2\2"+
-		"ab\3\2\2\2b\r\3\2\2\2cf\5\22\n\2df\7\32\2\2ec\3\2\2\2ed\3\2\2\2f\17\3"+
-		"\2\2\2gi\7\33\2\2hg\3\2\2\2ij\3\2\2\2jh\3\2\2\2jk\3\2\2\2k\21\3\2\2\2"+
-		"ln\7\33\2\2ml\3\2\2\2no\3\2\2\2om\3\2\2\2op\3\2\2\2p\23\3\2\2\2qs\5\22"+
-		"\n\2rt\7\31\2\2sr\3\2\2\2st\3\2\2\2t\25\3\2\2\2uv\7\n\2\2vw\5\30\r\2w"+
-		"\27\3\2\2\2x~\5\"\22\2yz\5\32\16\2z{\5\"\22\2{}\3\2\2\2|y\3\2\2\2}\u0080"+
-		"\3\2\2\2~|\3\2\2\2~\177\3\2\2\2\177\31\3\2\2\2\u0080~\3\2\2\2\u0081\u0082"+
-		"\t\2\2\2\u0082\33\3\2\2\2\u0083\u0086\7\34\2\2\u0084\u0086\5\22\n\2\u0085"+
+		"\22\24\26\30\32\34\36 \"$&\2\4\4\2\13\f\23\23\3\2\r\22\u0092\2+\3\2\2"+
+		"\2\4-\3\2\2\2\69\3\2\2\2\bM\3\2\2\2\nZ\3\2\2\2\f_\3\2\2\2\16e\3\2\2\2"+
+		"\20h\3\2\2\2\22m\3\2\2\2\24q\3\2\2\2\26u\3\2\2\2\30x\3\2\2\2\32\u0081"+
+		"\3\2\2\2\34\u0085\3\2\2\2\36\u0087\3\2\2\2 \u0089\3\2\2\2\"\u008b\3\2"+
+		"\2\2$\u008f\3\2\2\2&\u0093\3\2\2\2(,\5\4\3\2),\5\6\4\2*,\5\b\5\2+(\3\2"+
+		"\2\2+)\3\2\2\2+*\3\2\2\2,\3\3\2\2\2-.\7\3\2\2./\7\4\2\2/\60\5\20\t\2\60"+
+		"\62\7\26\2\2\61\63\5\n\6\2\62\61\3\2\2\2\63\64\3\2\2\2\64\62\3\2\2\2\64"+
+		"\65\3\2\2\2\65\66\3\2\2\2\66\67\7\27\2\2\678\7\32\2\28\5\3\2\2\29:\7\5"+
+		"\2\2:;\7\6\2\2;<\5\20\t\2<>\7\30\2\2=?\5\24\13\2>=\3\2\2\2?@\3\2\2\2@"+
+		">\3\2\2\2@A\3\2\2\2AB\3\2\2\2BC\7\31\2\2CD\7\7\2\2DF\7\30\2\2EG\5$\23"+
+		"\2FE\3\2\2\2GH\3\2\2\2HF\3\2\2\2HI\3\2\2\2IJ\3\2\2\2JK\7\31\2\2KL\7\32"+
+		"\2\2L\7\3\2\2\2MO\7\b\2\2NP\5\f\7\2ON\3\2\2\2PQ\3\2\2\2QO\3\2\2\2QR\3"+
+		"\2\2\2RS\3\2\2\2ST\7\t\2\2TV\5\20\t\2UW\5\26\f\2VU\3\2\2\2VW\3\2\2\2W"+
+		"X\3\2\2\2XY\7\32\2\2Y\t\3\2\2\2Z[\5\22\n\2[]\7\25\2\2\\^\7\33\2\2]\\\3"+
+		"\2\2\2]^\3\2\2\2^\13\3\2\2\2_a\5\16\b\2`b\7\33\2\2a`\3\2\2\2ab\3\2\2\2"+
+		"b\r\3\2\2\2cf\5\22\n\2df\7\34\2\2ec\3\2\2\2ed\3\2\2\2f\17\3\2\2\2gi\7"+
+		"\35\2\2hg\3\2\2\2ij\3\2\2\2jh\3\2\2\2jk\3\2\2\2k\21\3\2\2\2ln\7\35\2\2"+
+		"ml\3\2\2\2no\3\2\2\2om\3\2\2\2op\3\2\2\2p\23\3\2\2\2qs\5\22\n\2rt\7\33"+
+		"\2\2sr\3\2\2\2st\3\2\2\2t\25\3\2\2\2uv\7\n\2\2vw\5\30\r\2w\27\3\2\2\2"+
+		"x~\5\"\22\2yz\5\32\16\2z{\5\"\22\2{}\3\2\2\2|y\3\2\2\2}\u0080\3\2\2\2"+
+		"~|\3\2\2\2~\177\3\2\2\2\177\31\3\2\2\2\u0080~\3\2\2\2\u0081\u0082\t\2"+
+		"\2\2\u0082\33\3\2\2\2\u0083\u0086\7\36\2\2\u0084\u0086\5\22\n\2\u0085"+
 		"\u0083\3\2\2\2\u0085\u0084\3\2\2\2\u0086\35\3\2\2\2\u0087\u0088\5\34\17"+
 		"\2\u0088\37\3\2\2\2\u0089\u008a\5\34\17\2\u008a!\3\2\2\2\u008b\u008c\5"+
 		" \21\2\u008c\u008d\5&\24\2\u008d\u008e\5\36\20\2\u008e#\3\2\2\2\u008f"+
-		"\u0091\7\34\2\2\u0090\u0092\7\31\2\2\u0091\u0090\3\2\2\2\u0091\u0092\3"+
+		"\u0091\7\36\2\2\u0090\u0092\7\33\2\2\u0091\u0090\3\2\2\2\u0091\u0092\3"+
 		"\2\2\2\u0092%\3\2\2\2\u0093\u0094\t\3\2\2\u0094\'\3\2\2\2\21+\64@HQV]"+
 		"aejos~\u0085\u0091";
 	public static final ATN _ATN =

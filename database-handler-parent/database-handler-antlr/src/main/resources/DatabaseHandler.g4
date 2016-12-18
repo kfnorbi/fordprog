@@ -67,6 +67,8 @@ relational_op
    | NOT_EQ
    | LTE
    | GTE
+   | LTH
+   | GTH
    ;
 CREATE
 	: 'create' | 'CREATE'
@@ -107,6 +109,12 @@ LTH
 GTH
    : '>'
    ;
+LTE
+	:'<='
+	;
+GTE
+	:'>='
+	;
 NOT_EQ
    : '!='
    ;
