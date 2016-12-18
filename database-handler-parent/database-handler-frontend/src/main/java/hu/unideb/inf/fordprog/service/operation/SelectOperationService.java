@@ -1,7 +1,9 @@
 package hu.unideb.inf.fordprog.service.operation;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Column_listContext;
@@ -30,15 +32,43 @@ public class SelectOperationService extends AbstractOperationService {
         final List<Column_listContext> columns = ctx.columns;
         final DatabaseSelectResult selectResult = new DatabaseSelectResult();
         final String tableName = ctx.tableName.getText();
+        final List<DatabaseRecord> dataFromTable = Database.getDataFromTable(tableName);
+        Set<DatabaseTableColumnDescriptor> columnsFromTable;
+
         if (isAsterixColumn(columns)) {
-            final List<DatabaseRecord> dataFromTable = Database.getDataFromTable(tableName);
-            final Set<DatabaseTableColumnDescriptor> columnsFromTable = Database.getColumnsOrderedFromTable(tableName);
+            columnsFromTable = Database.getColumnsOrderedFromTable(tableName);
             final List<List<DatabaseData>> collect = dataFromTable.stream().map(p -> p.getData())
                     .collect(Collectors.toList());
             selectResult.setColumns(columnsFromTable);
             collect.stream().forEach(dataList -> selectResult.add(new DatabaseSelectRecord(dataList)));
+        } else {
+            Set<String> requiredColumns = columns.stream().distinct().map(p -> p.columName.getText())
+                    .collect(Collectors.toSet());
+            Integer rowIndex = 1;
+            for (DatabaseRecord record : dataFromTable) {
+                DatabaseSelectRecord databaseSelectRecord = new DatabaseSelectRecord();
+                for (DatabaseData data : record.getData()) {
+                    if (requiredColumns.contains(data.getColumnName())) {
+                        databaseSelectRecord.add(data);
+                    }
+                }
+                selectResult.add(databaseSelectRecord);
+            }
+            Set<DatabaseTableColumnDescriptor> resultColumns = new HashSet<>();
+            for (String string : requiredColumns) {
+                resultColumns.add(toDatabaseTableColumnDesciptor(string, rowIndex++));
+            }
+            selectResult.setColumns(resultColumns);
         }
+
         return selectResult;
+    }
+
+    private DatabaseTableColumnDescriptor toDatabaseTableColumnDesciptor(String columnName, Integer index) {
+        DatabaseTableColumnDescriptor column = new DatabaseTableColumnDescriptor();
+        column.setColumnName(columnName);
+        column.setIndex(index);
+        return column;
     }
 
     private boolean isAsterixColumn(final List<Column_listContext> columns) {

@@ -20,6 +20,7 @@ import hu.unideb.inf.fordprog.model.DatabaseSelectResult;
 import hu.unideb.inf.fordprog.model.DatabaseTable;
 import hu.unideb.inf.fordprog.model.DatabaseTableColumnDescriptor;
 import hu.unideb.inf.fordprog.model.DatabaseTableColumnType;
+import hu.unideb.inf.fordprog.service.display.DisplayService;
 
 public class DatabaseCreateTableTest {
 
@@ -27,6 +28,8 @@ public class DatabaseCreateTableTest {
     private static final String NAME = "name";
     private static final String ID = "id";
     private static final String TEST_TABLE_NAME = "test";
+
+    private DisplayService displayService = new DisplayService();
 
     @Before
     public void setUp() throws Exception {
@@ -41,7 +44,6 @@ public class DatabaseCreateTableTest {
         List<DatabaseTable> tables = Database.getTables();
         DatabaseTable databaseTable = tables.get(0);
         String tableName = databaseTable.getName();
-        System.out.println(tables);
         Assert.assertEquals(TEST_TABLE_NAME, tableName);
 
         List<DatabaseTableColumnDescriptor> columns = databaseTable.getColumns();
@@ -128,10 +130,10 @@ public class DatabaseCreateTableTest {
         // DatabaseInterpreter.interpret("insert into test
         // (id,full_name,payment) values (3,'Nandor',325.5);");
         DatabaseInterpreter.interpret("select * from test");
-        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
-        System.out.println(databaseCache);
+        displayService.displayResult();
     }
 
+    // FOR FUN
     @Test
     public void testInsertUlyssysTeam() {
         DatabaseInterpreter
@@ -145,9 +147,19 @@ public class DatabaseCreateTableTest {
         DatabaseInterpreter
                 .interpret("insert into ulyssys (id,feljeszto_neve,dogyness,fame) values (4,'Viktor',0,1000);");
         DatabaseInterpreter.interpret("select * from ulyssys");
-        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
-        System.out.println(databaseCache);
+        displayService.displayResult();
+    }
 
+    @Test
+    public void testSelectSpecifiedColumns() {
+        DatabaseInterpreter
+                .interpret("create table test {id number, full_name varchar, dateOfBirth date, payment number};");
+
+        DatabaseInterpreter.interpret("insert into test (id,full_name,dateOfBirth) values (1,'Jani',1995-10-20);");
+        DatabaseInterpreter.interpret("insert into test (id,full_name) values (2,'Lora');");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (3,'Nandor',325.5);");
+        DatabaseInterpreter.interpret("select payment,full_name,id from test");
+        displayService.displayResult();
     }
 
 }

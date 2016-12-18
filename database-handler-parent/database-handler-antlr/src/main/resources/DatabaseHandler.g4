@@ -23,7 +23,7 @@ column_definition
 	:  columnName=column_name columnType=COLUMN_TPYE COMA?
 	;
 column_list
-	: columName=column_list_type
+	: columName=column_list_type COMA?
 	;
 column_list_type
 	: column_name
