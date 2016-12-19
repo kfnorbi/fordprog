@@ -130,4 +130,8 @@ Az alkalmazás biztosítja a `SUM,AVG,COUNT,MIN,MAX` függvények használatát a leké
 Példa:
 
     select sum(payment) from test;
-   Amely visszaadja a `test` táblában lévõ `payment` oszlopok összegét.
+Amely visszaadja a `test` táblában lévõ `payment` oszlopok összegét.
+Kimenete:
+
+    |   sum(payment)|
+    |         669.17|
