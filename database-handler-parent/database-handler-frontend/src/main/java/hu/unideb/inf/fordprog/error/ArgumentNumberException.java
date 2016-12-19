@@ -1,9 +1,10 @@
 package hu.unideb.inf.fordprog.error;
+
 /**
  *
  *
  */
-public class ArgumentNumberException extends RuntimeException {
+public class ArgumentNumberException extends SQLException {
 
     /**
      *
@@ -15,7 +16,7 @@ public class ArgumentNumberException extends RuntimeException {
     }
 
     public ArgumentNumberException(String message) {
-        super(message);
+        super("SQL Error - 6: " + message);
     }
 
     public ArgumentNumberException(String message, Throwable cause) {

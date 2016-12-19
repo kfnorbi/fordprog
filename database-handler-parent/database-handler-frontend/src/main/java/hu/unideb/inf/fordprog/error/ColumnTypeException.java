@@ -3,7 +3,7 @@ package hu.unideb.inf.fordprog.error;
  *
  *
  */
-public class ColumnTypeException extends RuntimeException {
+public class ColumnTypeException extends SQLException {
 
     /**
      *
@@ -15,7 +15,7 @@ public class ColumnTypeException extends RuntimeException {
     }
 
     public ColumnTypeException(String message) {
-        super(message);
+        super("SQL Error - 4: " +message);
     }
 
     public ColumnTypeException(String message, Throwable cause) {

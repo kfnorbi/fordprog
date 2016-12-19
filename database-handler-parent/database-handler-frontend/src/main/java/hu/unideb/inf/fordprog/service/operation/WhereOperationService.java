@@ -69,7 +69,7 @@ public class WhereOperationService extends AbstractOperationService {
         Double numberCondition;
         switch (operator) {
         case "=":
-            result = value.equals(condition);
+            result = isEquals(value, condition);
             break;
         case ">":
             numberValue = Double.valueOf(value);
@@ -92,9 +92,7 @@ public class WhereOperationService extends AbstractOperationService {
             result = numberValue >= numberCondition;
             break;
         case "!=":
-            numberValue = Double.valueOf(value);
-            numberCondition = Double.valueOf(condition);
-            result = !numberValue.equals(numberCondition);
+            result = !isEquals(value, condition);
             break;
         default:
             result = false;
@@ -102,6 +100,30 @@ public class WhereOperationService extends AbstractOperationService {
         }
         LOGGER.debug("SQL filter result: {}", result);
         return result;
+    }
+
+    private boolean isEquals(String value, String condition) {
+        boolean result;
+        Double numberValue;
+        Double numberCondition;
+        if (isNumbers(value, condition)) {
+            numberValue = Double.valueOf(value);
+            numberCondition = Double.valueOf(condition);
+            result = numberValue.equals(numberCondition);
+        } else {
+            result = value.equals(condition);
+        }
+        return result;
+    }
+
+    private boolean isNumbers(String value, String condition) {
+        try {
+            Double.valueOf(value);
+            Double.valueOf(condition);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 
 }

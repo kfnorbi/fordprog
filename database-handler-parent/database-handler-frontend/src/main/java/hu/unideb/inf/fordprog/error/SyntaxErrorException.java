@@ -1,9 +1,10 @@
 package hu.unideb.inf.fordprog.error;
+
 /**
  *
  *
  */
-public class SyntaxErrorException extends RuntimeException {
+public class SyntaxErrorException extends SQLException {
 
     /**
      *
@@ -15,7 +16,7 @@ public class SyntaxErrorException extends RuntimeException {
     }
 
     public SyntaxErrorException(String message) {
-        super(message);
+        super("SQL Error - 1: " + message);
     }
 
     public SyntaxErrorException(String message, Throwable cause) {

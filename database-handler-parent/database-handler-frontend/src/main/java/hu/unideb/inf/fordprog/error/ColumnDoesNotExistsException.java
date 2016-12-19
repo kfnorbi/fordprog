@@ -3,7 +3,7 @@ package hu.unideb.inf.fordprog.error;
  *
  *
  */
-public class ColumnDoesNotExistsException extends RuntimeException {
+public class ColumnDoesNotExistsException extends SQLException {
 
     /**
      *
@@ -15,7 +15,7 @@ public class ColumnDoesNotExistsException extends RuntimeException {
     }
 
     public ColumnDoesNotExistsException(String message) {
-        super(message);
+        super("SQL Error - 5: " +message);
     }
 
     public ColumnDoesNotExistsException(String message, Throwable cause) {

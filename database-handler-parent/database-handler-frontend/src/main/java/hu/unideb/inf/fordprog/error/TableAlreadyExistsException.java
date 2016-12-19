@@ -1,9 +1,10 @@
 package hu.unideb.inf.fordprog.error;
+
 /**
  *
  *
  */
-public class TableAlreadyExistsException extends RuntimeException {
+public class TableAlreadyExistsException extends SQLException {
 
     /**
      *
@@ -15,7 +16,7 @@ public class TableAlreadyExistsException extends RuntimeException {
     }
 
     public TableAlreadyExistsException(String message) {
-        super(message);
+        super("SQL Error - 2: " + message);
     }
 
     public TableAlreadyExistsException(String message, Throwable cause) {

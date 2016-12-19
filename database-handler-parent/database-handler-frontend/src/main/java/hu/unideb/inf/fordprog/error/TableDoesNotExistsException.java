@@ -1,9 +1,10 @@
 package hu.unideb.inf.fordprog.error;
+
 /**
  *
  *
  */
-public class TableDoesNotExistsException extends RuntimeException {
+public class TableDoesNotExistsException extends SQLException {
 
     /**
      *
@@ -15,7 +16,7 @@ public class TableDoesNotExistsException extends RuntimeException {
     }
 
     public TableDoesNotExistsException(String message) {
-        super(message);
+        super("SQL Error - 3: " + message);
     }
 
     public TableDoesNotExistsException(String message, Throwable cause) {

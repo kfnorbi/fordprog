@@ -2,9 +2,12 @@ package hu.unideb.inf.fordprog.interpreter;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerLexer;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser;
+import hu.unideb.inf.fordprog.error.SQLException;
 import hu.unideb.inf.fordprog.error.SyntaxErrorException;
 import hu.unideb.inf.fordprog.parser.DatabaseHandlerListenerImpl;
 
@@ -13,6 +16,11 @@ import hu.unideb.inf.fordprog.parser.DatabaseHandlerListenerImpl;
  *
  */
 public final class DatabaseInterpreter {
+
+    /**
+     * Osztály loggere.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseInterpreter.class);
 
     private DatabaseInterpreter() {
     }
@@ -27,7 +35,12 @@ public final class DatabaseInterpreter {
         final DatabaseHandlerLexer lexer = new DatabaseHandlerLexer(new ANTLRInputStream(command));
         final DatabaseHandlerParser parser = new DatabaseHandlerParser(new CommonTokenStream(lexer));
         parser.addParseListener(new DatabaseHandlerListenerImpl());
-        parser.sql_statement();
+        try {
+            parser.sql_statement();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+            throw e;
+        }
         final Integer numberOfErrors = parser.getNumberOfSyntaxErrors();
         if (numberOfErrors > 0) {
             throw new SyntaxErrorException("Syntax error!");

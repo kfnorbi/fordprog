@@ -142,7 +142,8 @@ public class DatabaseCreateTableTest {
                 .interpret("insert into ulyssys (id,feljeszto_neve,dogyness,fame) values (3,'RicsiFiu',0,100);");
         DatabaseInterpreter
                 .interpret("insert into ulyssys (id,feljeszto_neve,dogyness,fame) values (4,'Viktor',0,1000);");
-        DatabaseInterpreter.interpret("select experience,feljeszto_neve,dogyness,id,fame from ulyssys;");
+        DatabaseInterpreter
+                .interpret("select experience,feljeszto_neve,dogyness,id,fame from ulyssys where dogyness != 100;");
     }
 
     @Test
@@ -167,6 +168,18 @@ public class DatabaseCreateTableTest {
         Assert.assertEquals(1, DatabaseSelectCache.getDatabaseCache().getSelectRecords().size());
         DatabaseInterpreter.interpret("select payment,full_name,id from test where payment > 10;");
         Assert.assertEquals(1, DatabaseSelectCache.getDatabaseCache().getSelectRecords().size());
+    }
+
+    @Test
+    public void demo() {
+        DatabaseInterpreter
+                .interpret("create table test {id number, full_name varchar, dateOfBirth date, payment number};");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (1,'TestJohn',345.5);");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (2,'TestAndrea',200.67);");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,dateOfBirth) values (3,'TestMichael',1975-09-12);");
+        DatabaseInterpreter.interpret("select * from test;");
+        DatabaseInterpreter.interpret("select payment,full_name,id from test;");
+        DatabaseInterpreter.interpret("select payment,full_name from test where payment > 10;");
     }
 
 }
