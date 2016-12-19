@@ -124,3 +124,10 @@ Kimenet:
     |        payment||      full_name|
     |          345.5||       TestJohn|
     |         200.67||     TestAndrea|
+	
+####Függvények használata
+Az alkalmazás biztosítja a `SUM,AVG,COUNT,MIN,MAX` függvények használatát a lekérdezésekben, ezek jelenleg csak a lekérdezési oszlopok helyén szerepelhet, WHERE után nem.
+Példa:
+
+    select sum(payment) from test;
+   Amely visszaadja a `test` táblában lévõ `payment` oszlopok összegét.
