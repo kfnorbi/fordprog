@@ -86,6 +86,16 @@ public interface DatabaseHandlerListener extends ParseTreeListener {
 	 */
 	void exitColumn_list_type(DatabaseHandlerParser.Column_list_typeContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DatabaseHandlerParser#function_clause}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunction_clause(DatabaseHandlerParser.Function_clauseContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DatabaseHandlerParser#function_clause}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunction_clause(DatabaseHandlerParser.Function_clauseContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code tableName}
 	 * labeled alternative in {@link DatabaseHandlerParser#table_name}.
 	 * @param ctx the parse tree
@@ -205,6 +215,16 @@ public interface DatabaseHandlerListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitValue(DatabaseHandlerParser.ValueContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DatabaseHandlerParser#function}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunction(DatabaseHandlerParser.FunctionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DatabaseHandlerParser#function}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunction(DatabaseHandlerParser.FunctionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DatabaseHandlerParser#relational_op}.
 	 * @param ctx the parse tree

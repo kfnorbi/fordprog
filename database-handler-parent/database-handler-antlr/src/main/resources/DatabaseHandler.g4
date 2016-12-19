@@ -17,17 +17,20 @@ insert_into
 	: INSERT INTO tableName=table_name LPAR insertColumnDefinition+=insert_column_definition+ RPAR VALUES LPAR value+ RPAR SEMICOLON #insertInto
 	;
 select_clause
-	: SELECT columns+=column_list+ FROM tableName=table_name (where=where_clause)? SEMICOLON #select
+	: SELECT columns+=column_list+  FROM tableName=table_name (where=where_clause)? SEMICOLON #select
 	;
 column_definition
 	:  columnName=column_name columnType=COLUMN_TPYE COMA?
 	;
 column_list
-	: columName=column_list_type COMA?
+	: columName=column_list_type COMA? | functionName=function_clause
 	;
 column_list_type
 	: column_name
 	| ASTERIX
+	;
+function_clause
+	:functionLabel=function LPAR columnName=column_name RPAR COMA?
 	;
 table_name
 	: tableName=ID+ #tableName
@@ -61,6 +64,13 @@ simple_expression
    ;
 value
 	: CHAR COMA?
+	;
+function
+	: MIN
+	| MAX
+	| COUNT
+	| SUM
+	| AVG
 	;
 relational_op
    : EQ
@@ -129,6 +139,21 @@ COLUMN_TPYE
 	: 'varchar'
 	| 'number'
 	| 'date'
+	;
+SUM
+	:'sum' | 'SUM'
+	;
+AVG
+	:'avg' | 'AVG'
+	;
+MIN
+	:'min' | 'MIN'
+	;
+MAX
+	:'max' | 'MAX'
+	;
+COUNT
+	:'count' | 'COUNT'
 	;
 LKPAR
 	: '{'

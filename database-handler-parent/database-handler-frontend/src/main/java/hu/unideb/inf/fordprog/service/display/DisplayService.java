@@ -40,31 +40,33 @@ public class DisplayService {
 
     private String buildDisplay(Set<DatabaseTableColumnDescriptor> columns, List<DatabaseSelectRecord> selectRecords) {
         StringBuilder builder = new StringBuilder();
-        List<DatabaseTableColumnDescriptor> columnList = columns.stream().collect(Collectors.toList());
-        for (DatabaseTableColumnDescriptor column : columns) {
-            builder.append(formatColumnName(column));
-        }
-        builder.append(ENDLINE);
-        for (DatabaseSelectRecord record : selectRecords) {
-            List<DatabaseData> dataList = record.getData();
-            for (int i = 0; i < columnList.size(); i++) {
-                String columnName = columnList.get(i).getColumnName();
-                boolean found = false;
-                for (DatabaseData databaseData : dataList) {
-                    if (databaseData.getColumnName().equals(columnName)) {
-                        found = true;
-                    }
-                    if (found) {
-                        builder.append(createDisplayData(databaseData));
-                        break;
-                    }
-                }
-                if (!found) {
-                    builder.append(buildNull());
-                }
-
+        if (columns != null && selectRecords != null) {
+            List<DatabaseTableColumnDescriptor> columnList = columns.stream().collect(Collectors.toList());
+            for (DatabaseTableColumnDescriptor column : columns) {
+                builder.append(formatColumnName(column));
             }
             builder.append(ENDLINE);
+            for (DatabaseSelectRecord record : selectRecords) {
+                List<DatabaseData> dataList = record.getData();
+                for (int i = 0; i < columnList.size(); i++) {
+                    String columnName = columnList.get(i).getColumnName();
+                    boolean found = false;
+                    for (DatabaseData databaseData : dataList) {
+                        if (databaseData.getColumnName().equals(columnName)) {
+                            found = true;
+                        }
+                        if (found) {
+                            builder.append(createDisplayData(databaseData));
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        builder.append(buildNull());
+                    }
+
+                }
+                builder.append(ENDLINE);
+            }
         }
         return builder.toString();
     }

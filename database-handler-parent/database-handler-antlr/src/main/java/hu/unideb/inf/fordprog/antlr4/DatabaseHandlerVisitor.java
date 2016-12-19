@@ -58,6 +58,12 @@ public interface DatabaseHandlerVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitColumn_list_type(DatabaseHandlerParser.Column_list_typeContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link DatabaseHandlerParser#function_clause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction_clause(DatabaseHandlerParser.Function_clauseContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code tableName}
 	 * labeled alternative in {@link DatabaseHandlerParser#table_name}.
 	 * @param ctx the parse tree
@@ -128,6 +134,12 @@ public interface DatabaseHandlerVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitValue(DatabaseHandlerParser.ValueContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DatabaseHandlerParser#function}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction(DatabaseHandlerParser.FunctionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DatabaseHandlerParser#relational_op}.
 	 * @param ctx the parse tree

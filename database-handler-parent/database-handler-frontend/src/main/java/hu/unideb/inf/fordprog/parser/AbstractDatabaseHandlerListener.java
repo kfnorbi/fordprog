@@ -13,6 +13,8 @@ import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.CreateTableContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.ElementContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Expr_opContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.ExpressionLabelContext;
+import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.FunctionContext;
+import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Function_clauseContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.InsertColumnDefinitionContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.InsertIntoContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Left_elementContext;
@@ -235,6 +237,26 @@ public abstract class AbstractDatabaseHandlerListener implements DatabaseHandler
 
     @Override
     public void exitExpressionLabel(ExpressionLabelContext ctx) {
+
+    }
+
+    @Override
+    public void enterFunction(FunctionContext ctx) {
+
+    }
+
+    @Override
+    public void exitFunction(FunctionContext ctx) {
+
+    }
+
+    @Override
+    public void enterFunction_clause(Function_clauseContext ctx) {
+
+    }
+
+    @Override
+    public void exitFunction_clause(Function_clauseContext ctx) {
 
     }
 }

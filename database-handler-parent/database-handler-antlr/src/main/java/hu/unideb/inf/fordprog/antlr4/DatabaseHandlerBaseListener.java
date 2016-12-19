@@ -102,6 +102,18 @@ public class DatabaseHandlerBaseListener implements DatabaseHandlerListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFunction_clause(DatabaseHandlerParser.Function_clauseContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunction_clause(DatabaseHandlerParser.Function_clauseContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTableName(DatabaseHandlerParser.TableNameContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -229,6 +241,18 @@ public class DatabaseHandlerBaseListener implements DatabaseHandlerListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitValue(DatabaseHandlerParser.ValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunction(DatabaseHandlerParser.FunctionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunction(DatabaseHandlerParser.FunctionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

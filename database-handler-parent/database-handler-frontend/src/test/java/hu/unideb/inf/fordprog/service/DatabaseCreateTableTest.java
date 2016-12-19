@@ -176,10 +176,21 @@ public class DatabaseCreateTableTest {
                 .interpret("create table test {id number, full_name varchar, dateOfBirth date, payment number};");
         DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (1,'TestJohn',345.5);");
         DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (2,'TestAndrea',200.67);");
-        DatabaseInterpreter.interpret("insert into test (id,full_name,dateOfBirth) values (3,'TestMichael',1975-09-12);");
+        DatabaseInterpreter
+                .interpret("insert into test (id,full_name,dateOfBirth) values (3,'TestMichael',1975-09-12);");
         DatabaseInterpreter.interpret("select * from test;");
         DatabaseInterpreter.interpret("select payment,full_name,id from test;");
         DatabaseInterpreter.interpret("select payment,full_name from test where payment > 10;");
+    }
+
+    @Test
+    public void testFunction() {
+        DatabaseInterpreter
+                .interpret("create table test {id number, full_name varchar, dateOfBirth date, payment number};");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (1,'TestJohn',345.5);");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (2,'TestAndrea',200.67);");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (3,'TestMichael',123);");
+        DatabaseInterpreter.interpret("select sum(payment) from test;");
     }
 
 }

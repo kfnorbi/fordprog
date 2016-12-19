@@ -1,12 +1,16 @@
 package hu.unideb.inf.fordprog.service.operation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Column_listContext;
+import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Function_clauseContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.SelectContext;
+import hu.unideb.inf.fordprog.error.ColumnTypeException;
 import hu.unideb.inf.fordprog.model.Database;
 import hu.unideb.inf.fordprog.model.DatabaseData;
 import hu.unideb.inf.fordprog.model.DatabaseRecord;
@@ -20,6 +24,15 @@ import hu.unideb.inf.fordprog.model.DatabaseTableColumnDescriptor;
  */
 public class SelectOperationService extends AbstractOperationService {
 
+    private static Set<String> functionNames;
+
+    /**
+     *
+     */
+    public SelectOperationService() {
+        functionNames = Arrays.asList("sum", "avg", "min", "max", "count").stream().collect(Collectors.toSet());
+    }
+
     /**
      * Lekérdezés végrehajtása kontextus-on keresztül.
      *
@@ -32,13 +45,62 @@ public class SelectOperationService extends AbstractOperationService {
         final String tableName = ctx.tableName.getText();
         DatabaseSelectResult selectResult;
         final List<DatabaseRecord> dataFromTable = Database.getDataFromTable(tableName);
-        if (isAsterixColumn(columns)) {
-            selectResult = selectAllColumns(tableName, dataFromTable);
+        if (isFunction(columns)) {
+            // Csak az első funkciót kezeljük!
+            Column_listContext functionColumn = columns.get(0);
+            selectResult = selectWithSpecifiedFunction(functionColumn, dataFromTable);
         } else {
-            checkIfEveryColumnExistsInTable(columns, tableName);
-            selectResult = selectWithSpecifiedColumns(columns, dataFromTable);
+            if (isAsterixColumn(columns)) {
+                selectResult = selectAllColumns(tableName, dataFromTable);
+            } else {
+                checkIfEveryColumnExistsInTable(columns, tableName);
+                selectResult = selectWithSpecifiedColumns(columns, dataFromTable);
+            }
+        }
+
+        return selectResult;
+    }
+
+    private DatabaseSelectResult selectWithSpecifiedFunction(Column_listContext functionColumn,
+            List<DatabaseRecord> dataFromTable) {
+        DatabaseSelectResult selectResult = new DatabaseSelectResult();
+        Function_clauseContext functionName = functionColumn.functionName;
+        if (functionName != null) {
+            String function = functionName.functionLabel.getText();
+            List<String> requiredColumns = Arrays.asList(functionColumn.functionName.columnName.getText());
+            List<String> requiredFunctionColumns = Arrays.asList(functionColumn.functionName.getText());
+            for (DatabaseRecord record : dataFromTable) {
+                selectResult.add(createDatabaseSelectRecord(requiredColumns, record));
+            }
+            DatabaseSelectRecord selectRecord = createSelectRecordByFunction(function, selectResult.getSelectRecords(),
+                    requiredFunctionColumns.get(0));
+            Set<DatabaseTableColumnDescriptor> resultColumns = createRequiredColumns(requiredFunctionColumns);
+            selectResult.setColumns(resultColumns);
+            selectResult.setSelectRecords(Arrays.asList(selectRecord));
         }
         return selectResult;
+    }
+
+    private DatabaseSelectRecord createSelectRecordByFunction(String function, List<DatabaseSelectRecord> selectRecords,
+            String columnName) {
+        List<Double> listForOperand = new ArrayList<>();
+        for (DatabaseSelectRecord databaseSelectRecord : selectRecords) {
+            for (DatabaseData data : databaseSelectRecord.getData()) {
+                try {
+                    listForOperand.add(Double.valueOf(data.getValue()));
+                } catch (NumberFormatException e) {
+                    throw new ColumnTypeException("Function parameter's type does not fit!");
+                }
+            }
+        }
+        return FunctionHelper.doFunctionOnList(function, listForOperand, columnName);
+    }
+
+    private boolean isFunction(List<Column_listContext> columns) {
+        List<Column_listContext> functionList = columns.stream()
+                .filter(p -> p.functionName != null && functionNames.contains(p.functionName.functionLabel.getText()))
+                .collect(Collectors.toList());
+        return !functionList.isEmpty();
     }
 
     private void checkIfEveryColumnExistsInTable(final List<Column_listContext> columns, final String tableName) {
