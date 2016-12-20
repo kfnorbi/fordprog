@@ -125,13 +125,20 @@ public class DatabaseCreateTableTest {
                 .interpret("create table test {id number, full_name varchar, dateOfBirth date, payment number};");
 
         DatabaseInterpreter.interpret("insert into test (id,full_name,dateOfBirth) values (1,'Jani',1995-10-20);");
-        DatabaseData firstId = new DatabaseData("id", DatabaseTableColumnType.NUMBER, "1");
-        DatabaseData firstName = new DatabaseData("name", DatabaseTableColumnType.VARCHAR, "Jani");
-        DatabaseData firstDate = new DatabaseData("dateOfBirth", DatabaseTableColumnType.DATE, "1995-10-20");
-        // DatabaseRecord firstRecord = new
-        // DatabaseRecord(Arrays.asList(firstId, firstName, firstDate));
         DatabaseInterpreter.interpret("insert into test (id,full_name) values (2,'Lora');");
         DatabaseInterpreter.interpret("select * from test;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        DatabaseSelectRecord firstRow = databaseCache.getSelectRecords().get(0);
+        Assert.assertTrue(firstRow.getData().contains(new DatabaseData("id", DatabaseTableColumnType.NUMBER, "1")));
+        Assert.assertTrue(
+                firstRow.getData().contains(new DatabaseData("full_name", DatabaseTableColumnType.VARCHAR, "Jani")));
+        Assert.assertTrue(firstRow.getData()
+                .contains(new DatabaseData("dateOfBirth", DatabaseTableColumnType.DATE, "1995-10-20")));
+
+        DatabaseSelectRecord secondRow = databaseCache.getSelectRecords().get(1);
+        Assert.assertTrue(secondRow.getData().contains(new DatabaseData("id", DatabaseTableColumnType.NUMBER, "2")));
+        Assert.assertTrue(
+                secondRow.getData().contains(new DatabaseData("full_name", DatabaseTableColumnType.VARCHAR, "Lora")));
     }
 
     // FOR FUN
@@ -169,6 +176,13 @@ public class DatabaseCreateTableTest {
         DatabaseInterpreter.interpret("insert into test (id,full_name) values (2,'Lora');");
         DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (3,'Nandor',325.5);");
         DatabaseInterpreter.interpret("select payment,full_name,id from test;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        Set<DatabaseTableColumnDescriptor> columns = databaseCache.getColumns();
+        Set<DatabaseTableColumnDescriptor> sortedColumnSet = new TreeSet<>();
+        sortedColumnSet.add(new DatabaseTableColumnDescriptor(1, "payment", DatabaseTableColumnType.NUMBER));
+        sortedColumnSet.add(new DatabaseTableColumnDescriptor(2, "full_name", DatabaseTableColumnType.VARCHAR));
+        sortedColumnSet.add(new DatabaseTableColumnDescriptor(3, "id", DatabaseTableColumnType.NUMBER));
+        Assert.assertEquals(sortedColumnSet, columns);
     }
 
     @Test
@@ -176,13 +190,32 @@ public class DatabaseCreateTableTest {
         DatabaseInterpreter
                 .interpret("create table test {id number, full_name varchar, dateOfBirth date, payment number};");
         DatabaseInterpreter.interpret("insert into test (id,full_name,dateOfBirth) values (1,'Jani',1995-10-20);");
-        DatabaseInterpreter.interpret("insert into test (id,full_name) values (2,'Lora');");
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (2,'Lora',210);");
         DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (3,'Nandor',325.5);");
         DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (4,'Nolbi',10);");
         DatabaseInterpreter.interpret("select payment,full_name,id from test where payment = 10;");
-        Assert.assertEquals(1, DatabaseSelectCache.getDatabaseCache().getSelectRecords().size());
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        DatabaseSelectRecord row = databaseCache.getSelectRecords().get(0);
+        Assert.assertTrue(row.getData().contains(new DatabaseData("id", DatabaseTableColumnType.NUMBER, "4")));
+        Assert.assertTrue(
+                row.getData().contains(new DatabaseData("full_name", DatabaseTableColumnType.VARCHAR, "Nolbi")));
+        Assert.assertTrue(row.getData().contains(new DatabaseData("payment", DatabaseTableColumnType.NUMBER, "10")));
+
         DatabaseInterpreter.interpret("select payment,full_name,id from test where payment > 10;");
-        Assert.assertEquals(1, DatabaseSelectCache.getDatabaseCache().getSelectRecords().size());
+        databaseCache = DatabaseSelectCache.getDatabaseCache();
+        Assert.assertEquals(2, DatabaseSelectCache.getDatabaseCache().getSelectRecords().size());
+        row = databaseCache.getSelectRecords().get(0);
+        Assert.assertTrue(row.getData().contains(new DatabaseData("id", DatabaseTableColumnType.NUMBER, "2")));
+        Assert.assertTrue(
+                row.getData().contains(new DatabaseData("full_name", DatabaseTableColumnType.VARCHAR, "Lora")));
+        Assert.assertTrue(row.getData().contains(new DatabaseData("payment", DatabaseTableColumnType.NUMBER, "210")));
+
+        row = databaseCache.getSelectRecords().get(1);
+        Assert.assertTrue(row.getData().contains(new DatabaseData("id", DatabaseTableColumnType.NUMBER, "3")));
+        Assert.assertTrue(
+                row.getData().contains(new DatabaseData("full_name", DatabaseTableColumnType.VARCHAR, "Nandor")));
+        Assert.assertTrue(row.getData().contains(new DatabaseData("payment", DatabaseTableColumnType.NUMBER, "325.5")));
+
     }
 
     @Test
@@ -348,7 +381,7 @@ public class DatabaseCreateTableTest {
         Assert.assertTrue(selectRecords.isEmpty());
     }
 
-//    @Test
+    // @Test
     public void testBigData() {
         DatabaseInterpreter.interpret("create table test {id number, full_name varchar, payment number};");
         for (int i = 0; i < 10000; i++) {

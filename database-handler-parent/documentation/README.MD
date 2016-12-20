@@ -169,5 +169,47 @@ Kimenete:
 
     |      count(payment)|
     |                 3.0|
+#### DISTINCT
+A `DISTINCT` használatával a lekérdezések egyediségét tudjuk biztosítani.
+`DISTINCT` használatának szintaxisa:
+ 
 
+    select distinct oszlopNeve(,oszlopNeve)* from táblaNeve (where feltételek)*;
+
+**Példa a DISTINCT alap használatára:**
+
+    create table test {
+	    id number,
+	    full_name varchar,
+	    dateOfBirth date,
+	    payment number
+	};
+    insert into test (id,full_name,payment) values (1,'TestJohn',345.5);
+    insert into test (id,full_name,payment) values (2,'TestAndrea',200.67);
+    insert into test (id,full_name,payment) values (3,'TestMichael',123);
+    insert into test (id,full_name,payment) values (4,'TestAndrea',200.67);
+    
+    select distinct payment from test;
+Kimenete:
+
+    |             payment|
+    |               345.5|
+    |              200.67|
+    |                 123|
+**Használata függvénnyel:**
+
+    select distinct sum(payment) from test;
+Kimenete:
+
+    |        sum(payment)|
+    |              669.17|
+
+**Használata függvénnyel és WHERE feltétellel:**
+
+    select distinct sum(payment) from test where payment > 200.66;
+
+Kimenete:
+
+    |        sum(payment)|
+    |              546.17|
 
