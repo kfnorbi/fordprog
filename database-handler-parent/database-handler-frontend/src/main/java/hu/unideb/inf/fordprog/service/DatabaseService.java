@@ -45,4 +45,13 @@ public interface DatabaseService {
      * @return
      */
     DatabaseSelectResult filterResultByWhereContext(WhereClauseContext ctx, DatabaseSelectResult selectResult);
+
+    /**
+     *
+     * @param selectResult
+     * @return
+     */
+    DatabaseSelectResult distinctResult(DatabaseSelectResult selectResult);
+
+
 }

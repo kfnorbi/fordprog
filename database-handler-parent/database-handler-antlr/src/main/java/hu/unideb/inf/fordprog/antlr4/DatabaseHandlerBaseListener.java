@@ -162,6 +162,18 @@ public class DatabaseHandlerBaseListener implements DatabaseHandlerListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterDistinctLabel(DatabaseHandlerParser.DistinctLabelContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDistinctLabel(DatabaseHandlerParser.DistinctLabelContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpressionLabel(DatabaseHandlerParser.ExpressionLabelContext ctx) { }
 	/**
 	 * {@inheritDoc}

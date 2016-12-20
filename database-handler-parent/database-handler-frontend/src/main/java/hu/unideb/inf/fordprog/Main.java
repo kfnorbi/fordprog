@@ -5,6 +5,7 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import hu.unideb.inf.fordprog.error.SQLException;
 import hu.unideb.inf.fordprog.error.SyntaxErrorException;
 import hu.unideb.inf.fordprog.interpreter.DatabaseInterpreter;
 
@@ -32,7 +33,7 @@ public final class Main {
                 String next = inputScanner.nextLine();
                 System.out.println(next);
                 DatabaseInterpreter.interpret(next);
-            } catch (SyntaxErrorException e) {
+            } catch (SQLException e) {
                 LOGGER.error("Error", e);
             }
         }

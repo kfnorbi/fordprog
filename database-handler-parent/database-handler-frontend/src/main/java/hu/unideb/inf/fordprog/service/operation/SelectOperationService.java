@@ -3,8 +3,12 @@ package hu.unideb.inf.fordprog.service.operation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -13,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Column_listContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Function_clauseContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.SelectContext;
+import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.WhereClauseContext;
 import hu.unideb.inf.fordprog.error.ColumnTypeException;
 import hu.unideb.inf.fordprog.model.Database;
 import hu.unideb.inf.fordprog.model.DatabaseData;
@@ -34,6 +39,8 @@ public class SelectOperationService extends AbstractOperationService {
 
     private static Set<String> functionNames;
 
+    private final WhereOperationService whereOperationService = new WhereOperationService();
+
     /**
      *
      */
@@ -51,7 +58,9 @@ public class SelectOperationService extends AbstractOperationService {
     public DatabaseSelectResult selectByContext(final SelectContext ctx) {
         final List<Column_listContext> columns = ctx.columns;
         final String tableName = ctx.tableName.getText();
-        DatabaseSelectResult selectResult;
+        DatabaseSelectResult selectResult = null;
+        boolean isFiltered = false;
+        boolean isDistincted = false;
         final List<DatabaseRecord> dataFromTable = Database.getDataFromTable(tableName);
         if (dataFromTable == null) {
             LOGGER.info("Table {} is empty.", tableName);
@@ -60,7 +69,16 @@ public class SelectOperationService extends AbstractOperationService {
         if (isFunction(columns)) {
             // Csak az első funkciót kezeljük!
             Column_listContext functionColumn = columns.get(0);
-            selectResult = selectWithSpecifiedFunction(functionColumn, dataFromTable);
+            if (shouldFilter(ctx)) {
+                selectResult = filterResultBeforeFunctionColumn(ctx, columns, dataFromTable);
+                isFiltered = true;
+            }
+            if (shouldDistinct(ctx)) {
+                selectResult = distinctResultBeforeFunctionColumn(columns, selectResult, dataFromTable);
+                isDistincted = true;
+            }
+            selectResult = selectWithSpecifiedFunction(functionColumn,
+                    selectResult != null ? mapSelectResultToDatabaseRecord(selectResult) : dataFromTable);
         } else {
             if (isAsterixColumn(columns)) {
                 selectResult = selectAllColumns(tableName, dataFromTable);
@@ -69,8 +87,43 @@ public class SelectOperationService extends AbstractOperationService {
                 selectResult = selectWithSpecifiedColumns(columns, dataFromTable);
             }
         }
-
+        selectResult.setFiltered(isFiltered);
+        selectResult.setDistincted(isDistincted);
         return selectResult;
+    }
+
+    private DatabaseSelectResult distinctResultBeforeFunctionColumn(final List<Column_listContext> columns,
+            DatabaseSelectResult selectResult, final List<DatabaseRecord> dataFromTable) {
+        DatabaseSelectResult result;
+        result = selectWithSpecifiedColumnsAndFunction(columns,
+                selectResult != null ? mapSelectResultToDatabaseRecord(selectResult) : dataFromTable);
+        result = distinctResult(result);
+        return result;
+    }
+
+    private DatabaseSelectResult filterResultBeforeFunctionColumn(final SelectContext ctx,
+            final List<Column_listContext> columns, final List<DatabaseRecord> dataFromTable) {
+        DatabaseSelectResult selectResult;
+        selectResult = selectWithSpecifiedColumnsAndFunction(columns, dataFromTable);
+        selectResult = whereOperationService.filterByContext((WhereClauseContext) ctx.where_clause(), selectResult);
+        return selectResult;
+    }
+
+    private boolean shouldFilter(SelectContext ctx) {
+        return ctx.where != null;
+    }
+
+    private List<DatabaseRecord> mapSelectResultToDatabaseRecord(DatabaseSelectResult selectResult) {
+        List<DatabaseSelectRecord> selectRecords = selectResult.getSelectRecords();
+        List<DatabaseRecord> records = new ArrayList<>();
+        for (DatabaseSelectRecord databaseSelectRecord : selectRecords) {
+            records.add(new DatabaseRecord(databaseSelectRecord.getData()));
+        }
+        return records;
+    }
+
+    private boolean shouldDistinct(final SelectContext ctx) {
+        return ctx.distinct() != null;
     }
 
     private DatabaseSelectResult selectWithSpecifiedFunction(Column_listContext functionColumn,
@@ -133,8 +186,24 @@ public class SelectOperationService extends AbstractOperationService {
         return selectResult;
     }
 
+    private DatabaseSelectResult selectWithSpecifiedColumnsAndFunction(final List<Column_listContext> columns,
+            final List<DatabaseRecord> dataFromTable) {
+        DatabaseSelectResult selectResult = new DatabaseSelectResult();
+        List<String> requiredColumns = getRequiredFunctionColumnsAsStringSet(columns);
+        for (DatabaseRecord record : dataFromTable) {
+            selectResult.add(createDatabaseSelectRecord(requiredColumns, record));
+        }
+        Set<DatabaseTableColumnDescriptor> resultColumns = createRequiredColumns(requiredColumns);
+        selectResult.setColumns(resultColumns);
+        return selectResult;
+    }
+
     private List<String> getRequiredColumnsAsStringSet(final List<Column_listContext> columns) {
         return columns.stream().distinct().map(p -> p.columName.getText()).collect(Collectors.toList());
+    }
+
+    private List<String> getRequiredFunctionColumnsAsStringSet(final List<Column_listContext> columns) {
+        return columns.stream().distinct().map(p -> p.functionName.columnName.getText()).collect(Collectors.toList());
     }
 
     private DatabaseSelectRecord createDatabaseSelectRecord(List<String> requiredColumns, DatabaseRecord record) {
@@ -187,5 +256,21 @@ public class SelectOperationService extends AbstractOperationService {
 
     private boolean isAsterix(final List<Column_listContext> columns) {
         return columns.get(0).columName.getText().equals(ASTERIX);
+    }
+
+    /**
+     *
+     * @param result
+     * @return
+     */
+    public DatabaseSelectResult distinctResult(DatabaseSelectResult result) {
+        List<DatabaseSelectRecord> okay = result.getSelectRecords().stream().filter(distinctByKey(p -> p))
+                .collect(Collectors.toList());
+        return new DatabaseSelectResult(result.getColumns(), okay, true, result.isFiltered());
+    }
+
+    private <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 }

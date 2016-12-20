@@ -17,6 +17,10 @@ public class DatabaseSelectResult {
     @Delegate
     private List<DatabaseSelectRecord> selectRecords;
 
+    private boolean distincted = false;
+
+    private boolean filtered = false;
+
     /**
      * Konstuktor.
      */
@@ -34,6 +38,22 @@ public class DatabaseSelectResult {
         super();
         this.columns = columns;
         this.selectRecords = selectRecords;
+    }
+
+    /**
+     *
+     * @param columns
+     * @param selectRecords
+     * @param distincted
+     * @param filtered
+     */
+    public DatabaseSelectResult(Set<DatabaseTableColumnDescriptor> columns, List<DatabaseSelectRecord> selectRecords,
+            boolean distincted, boolean filtered) {
+        super();
+        this.columns = columns;
+        this.selectRecords = selectRecords;
+        this.distincted = distincted;
+        this.filtered = filtered;
     }
 
     public Set<DatabaseTableColumnDescriptor> getColumns() {
@@ -81,6 +101,22 @@ public class DatabaseSelectResult {
         } else if (!selectRecords.equals(other.selectRecords))
             return false;
         return true;
+    }
+
+    public boolean isDistincted() {
+        return distincted;
+    }
+
+    public void setDistincted(boolean distincted) {
+        this.distincted = distincted;
+    }
+
+    public boolean isFiltered() {
+        return filtered;
+    }
+
+    public void setFiltered(boolean filtered) {
+        this.filtered = filtered;
     }
 
 }

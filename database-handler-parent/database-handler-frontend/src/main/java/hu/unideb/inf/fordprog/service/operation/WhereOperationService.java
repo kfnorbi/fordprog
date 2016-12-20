@@ -53,6 +53,7 @@ public class WhereOperationService extends AbstractOperationService {
         ExpressionLabelContext expression = (ExpressionLabelContext) ctx.expression();
         List<Simple_expressionContext> simpleExpressions = expression.simple_expression();
         result = filterDataByExpressions(simpleExpressions, selectResult);
+        result.setFiltered(true);
         return result;
     }
 

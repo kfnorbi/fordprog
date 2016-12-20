@@ -40,9 +40,13 @@ public class DatabaseHandlerListenerImpl extends AbstractDatabaseHandlerListener
     @Override
     public void exitSelect(SelectContext ctx) {
         DatabaseSelectResult selectResult = service.selectByContext(ctx);
-        if (ctx.where != null) {
+        if (ctx.where != null && !selectResult.isFiltered()) {
             selectResult = service.filterResultByWhereContext((WhereClauseContext) ctx.where, selectResult);
         }
+        if (ctx.distinct() != null && !selectResult.isDistincted()) {
+            selectResult = service.distinctResult(selectResult);
+        }
+
         DatabaseSelectCache.setDatabaseCache(selectResult);
         displayService.displayResult();
     }

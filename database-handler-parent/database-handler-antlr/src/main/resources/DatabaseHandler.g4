@@ -17,7 +17,7 @@ insert_into
 	: INSERT INTO tableName=table_name LPAR insertColumnDefinition+=insert_column_definition+ RPAR VALUES LPAR value+ RPAR SEMICOLON #insertInto
 	;
 select_clause
-	: SELECT columns+=column_list+  FROM tableName=table_name (where=where_clause)? SEMICOLON #select
+	: SELECT distinct? columns+=column_list+  FROM tableName=table_name (where=where_clause)? SEMICOLON #select
 	;
 column_definition
 	:  columnName=column_name columnType=COLUMN_TPYE COMA?
@@ -44,6 +44,9 @@ insert_column_definition
 where_clause
    : WHERE expression #whereClause
    ;
+distinct
+	:DISTINCT #distinctLabel
+	;
 expression
    : simple_expression ( expr_op simple_expression )* #expressionLabel
    ;
@@ -154,6 +157,9 @@ MAX
 	;
 COUNT
 	:'count' | 'COUNT'
+	;
+DISTINCT
+	:'distinct' | 'DISTINCT'
 	;
 LKPAR
 	: '{'

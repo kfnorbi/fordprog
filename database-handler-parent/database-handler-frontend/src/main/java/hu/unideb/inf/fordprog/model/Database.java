@@ -92,7 +92,7 @@ public final class Database {
      *            az új beszúrandó adat.
      */
     public static void insertIntoTable(final String tableName, final DatabaseRecord element) {
-        LOGGER.info("Inserting data into table: {}", tableName);
+        LOGGER.debug("Inserting data into table: {}", tableName);
         final DatabaseTable table = getTableByName(tableName);
         List<DatabaseRecord> list = data.get(tableName);
         if (list == null) {

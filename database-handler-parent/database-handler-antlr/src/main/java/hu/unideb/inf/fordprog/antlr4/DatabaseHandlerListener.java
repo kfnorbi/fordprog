@@ -144,6 +144,18 @@ public interface DatabaseHandlerListener extends ParseTreeListener {
 	 */
 	void exitWhereClause(DatabaseHandlerParser.WhereClauseContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code distinctLabel}
+	 * labeled alternative in {@link DatabaseHandlerParser#distinct}.
+	 * @param ctx the parse tree
+	 */
+	void enterDistinctLabel(DatabaseHandlerParser.DistinctLabelContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code distinctLabel}
+	 * labeled alternative in {@link DatabaseHandlerParser#distinct}.
+	 * @param ctx the parse tree
+	 */
+	void exitDistinctLabel(DatabaseHandlerParser.DistinctLabelContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code expressionLabel}
 	 * labeled alternative in {@link DatabaseHandlerParser#expression}.
 	 * @param ctx the parse tree

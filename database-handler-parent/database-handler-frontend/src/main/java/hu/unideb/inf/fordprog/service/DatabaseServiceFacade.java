@@ -49,8 +49,17 @@ public class DatabaseServiceFacade implements DatabaseService {
         return service.filterResultByWhereContext(ctx, selectResult);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public DatabaseSelectResult distinctResult(DatabaseSelectResult selectResult) {
+        return service.distinctResult(selectResult);
+    }
+
     public DatabaseService getService() {
         return service;
     }
+
 
 }

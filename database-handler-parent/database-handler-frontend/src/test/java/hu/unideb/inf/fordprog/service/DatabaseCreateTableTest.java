@@ -1,6 +1,7 @@
 package hu.unideb.inf.fordprog.service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -23,7 +24,6 @@ import hu.unideb.inf.fordprog.model.DatabaseSelectResult;
 import hu.unideb.inf.fordprog.model.DatabaseTable;
 import hu.unideb.inf.fordprog.model.DatabaseTableColumnDescriptor;
 import hu.unideb.inf.fordprog.model.DatabaseTableColumnType;
-import hu.unideb.inf.fordprog.service.display.DisplayService;
 
 public class DatabaseCreateTableTest {
 
@@ -32,7 +32,8 @@ public class DatabaseCreateTableTest {
     private static final String ID = "id";
     private static final String TEST_TABLE_NAME = "test";
 
-    private DisplayService displayService = new DisplayService();
+    private static final String[] names = { "'TestJohn'", "'TestAdam'", "'TestLora'", "'TestNolbi'", "'TestZsolt'",
+            "'TestBarna'", "'TestTamas'", "'TestViktor'", "'TestFanny'", "'TestZoltan'", "'TestFerenc'" };
 
     @Before
     public void setUp() throws Exception {
@@ -345,6 +346,65 @@ public class DatabaseCreateTableTest {
         DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
         List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
         Assert.assertTrue(selectRecords.isEmpty());
+    }
+
+//    @Test
+    public void testBigData() {
+        DatabaseInterpreter.interpret("create table test {id number, full_name varchar, payment number};");
+        for (int i = 0; i < 10000; i++) {
+            DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (" + i + ","
+                    + names[i % (new Random().nextInt(names.length) + 1)] + "," + (new Random().nextInt(10000) + 10000)
+                    + ");");
+        }
+
+        DatabaseInterpreter.interpret("select count(id) from test;");
+        DatabaseInterpreter.interpret("select sum(payment) from test;");
+        DatabaseInterpreter.interpret("select avg(payment) from test;");
+        DatabaseInterpreter.interpret("select min(payment) from test;");
+        DatabaseInterpreter.interpret("select max(payment) from test;");
+
+    }
+
+    @Test
+    public void testDistinct() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (4,'TestAndrea',200.67);");
+        DatabaseInterpreter.interpret("select distinct payment from test;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        Assert.assertEquals(3, selectRecords.size());
+    }
+
+    @Test
+    public void testDistinctWithFunction() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (4,'TestAndrea',200.67);");
+        DatabaseInterpreter.interpret("select distinct sum(payment) from test;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        DatabaseSelectRecord databaseSelectRecord = selectRecords.get(0);
+        List<DatabaseData> data = databaseSelectRecord.getData();
+        DatabaseData databaseData = data.get(0);
+        Assert.assertEquals(1, selectRecords.size());
+        Assert.assertEquals(1, data.size());
+        // 345.5+123+200.67 = 669.17
+        Assert.assertEquals(Double.valueOf(669.17), Double.valueOf(databaseData.getValue()));
+    }
+
+    @Test
+    public void testDistinctWithWhereAndFunction() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (4,'TestAndrea',200.67);");
+        DatabaseInterpreter.interpret("select distinct sum(payment) from test where payment > 200.66;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        DatabaseSelectRecord databaseSelectRecord = selectRecords.get(0);
+        List<DatabaseData> data = databaseSelectRecord.getData();
+        DatabaseData databaseData = data.get(0);
+        Assert.assertEquals(1, selectRecords.size());
+        Assert.assertEquals(1, data.size());
+        // 345.5+200.67 = 546.17
+        Assert.assertEquals(Double.valueOf(546.17), Double.valueOf(databaseData.getValue()));
     }
 
     private void createTableAndInsertDataForFunctionTest() {

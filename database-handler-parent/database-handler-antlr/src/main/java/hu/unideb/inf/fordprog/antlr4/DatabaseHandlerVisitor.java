@@ -92,6 +92,13 @@ public interface DatabaseHandlerVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhereClause(DatabaseHandlerParser.WhereClauseContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code distinctLabel}
+	 * labeled alternative in {@link DatabaseHandlerParser#distinct}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDistinctLabel(DatabaseHandlerParser.DistinctLabelContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code expressionLabel}
 	 * labeled alternative in {@link DatabaseHandlerParser#expression}.
 	 * @param ctx the parse tree

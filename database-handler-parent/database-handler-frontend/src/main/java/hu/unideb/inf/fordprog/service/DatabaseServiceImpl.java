@@ -68,6 +68,14 @@ public class DatabaseServiceImpl implements DatabaseService {
         return whereOperationService.filterByContext(ctx, selectResult);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public DatabaseSelectResult distinctResult(DatabaseSelectResult selectResult) {
+        return selectOperationService.distinctResult(selectResult);
+    }
+
     public TableOperationService getTableService() {
         return tableService;
     }
