@@ -124,14 +124,50 @@ Kimenet:
     |        payment||      full_name|
     |          345.5||       TestJohn|
     |         200.67||     TestAndrea|
-	
 ####Függvények használata
 Az alkalmazás biztosítja a `SUM,AVG,COUNT,MIN,MAX` függvények használatát a lekérdezésekben, ezek jelenleg csak a lekérdezési oszlopok helyén szerepelhet, WHERE után nem.
-Példa:
+Példák a függvények használatára:
+
+**Összeg számítása:**
 
     select sum(payment) from test;
-Amely visszaadja a `test` táblában lévõ `payment` oszlopok összegét.
+
 Kimenete:
 
     |   sum(payment)|
     |         669.17|
+    
+**Átlag számítása:**
+
+    select avg(payment) from test;
+Kimenete:
+
+    |        avg(payment)|
+    |  223.05666666666664|
+**Legnagyobb elem keresése:**
+
+    select max(payment) from test;
+   
+   Kimenete:
+
+    |        max(payment)|
+    |               345.5|
+
+**Legkisebb elem keresése:**
+
+    select min(payment) from test;
+   Kimenete:
+
+    |        min(payment)|
+    |               123.0|
+
+ **Elemek darabszáma:**
+
+     select count(payment) from test;
+
+ Kimenete:
+
+    |      count(payment)|
+    |                 3.0|
+
+

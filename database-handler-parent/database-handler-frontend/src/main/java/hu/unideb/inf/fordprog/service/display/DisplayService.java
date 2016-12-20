@@ -19,7 +19,7 @@ import hu.unideb.inf.fordprog.model.DatabaseTableColumnDescriptor;
  */
 public class DisplayService {
 
-    private static final Integer DEFAULT_DISPLAY_LENGTH = 15;
+    private static final Integer DEFAULT_DISPLAY_LENGTH = 20;
 
     private static final String NULL = "NULL";
 

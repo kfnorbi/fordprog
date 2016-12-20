@@ -1,6 +1,8 @@
 package hu.unideb.inf.fordprog.service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,6 +18,8 @@ import hu.unideb.inf.fordprog.model.Database;
 import hu.unideb.inf.fordprog.model.DatabaseData;
 import hu.unideb.inf.fordprog.model.DatabaseRecord;
 import hu.unideb.inf.fordprog.model.DatabaseSelectCache;
+import hu.unideb.inf.fordprog.model.DatabaseSelectRecord;
+import hu.unideb.inf.fordprog.model.DatabaseSelectResult;
 import hu.unideb.inf.fordprog.model.DatabaseTable;
 import hu.unideb.inf.fordprog.model.DatabaseTableColumnDescriptor;
 import hu.unideb.inf.fordprog.model.DatabaseTableColumnType;
@@ -131,7 +135,7 @@ public class DatabaseCreateTableTest {
 
     // FOR FUN
     @Test
-    public void testInsertUlyssysTeam() {
+    public void testColumnOrderInSelect() {
         DatabaseInterpreter.interpret(
                 "create table ulyssys {id number, feljeszto_neve varchar, dogyness number, fame number,experience number};");
         DatabaseInterpreter.interpret(
@@ -144,6 +148,16 @@ public class DatabaseCreateTableTest {
                 .interpret("insert into ulyssys (id,feljeszto_neve,dogyness,fame) values (4,'Viktor',0,1000);");
         DatabaseInterpreter
                 .interpret("select experience,feljeszto_neve,dogyness,id,fame from ulyssys where dogyness != 100;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        Set<DatabaseTableColumnDescriptor> columns = databaseCache.getColumns();
+        Set<DatabaseTableColumnDescriptor> sortedColumnSet = new TreeSet<>();
+        sortedColumnSet.add(new DatabaseTableColumnDescriptor(1, "experience", DatabaseTableColumnType.NUMBER));
+        sortedColumnSet.add(new DatabaseTableColumnDescriptor(2, "feljeszto_neve", DatabaseTableColumnType.VARCHAR));
+        sortedColumnSet.add(new DatabaseTableColumnDescriptor(3, "dogyness", DatabaseTableColumnType.NUMBER));
+        sortedColumnSet.add(new DatabaseTableColumnDescriptor(4, "id", DatabaseTableColumnType.NUMBER));
+        sortedColumnSet.add(new DatabaseTableColumnDescriptor(5, "fame", DatabaseTableColumnType.NUMBER));
+        Assert.assertEquals(sortedColumnSet, columns);
+
     }
 
     @Test
@@ -184,13 +198,161 @@ public class DatabaseCreateTableTest {
     }
 
     @Test
-    public void testFunction() {
+    public void testSumFunction() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select sum(payment) from test;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        DatabaseSelectRecord databaseSelectRecord = selectRecords.get(0);
+        List<DatabaseData> data = databaseSelectRecord.getData();
+        DatabaseData databaseData = data.get(0);
+        Assert.assertEquals(1, selectRecords.size());
+        Assert.assertEquals(1, data.size());
+        // 345.5+123+200.67 = 669.17
+        Assert.assertEquals(Double.valueOf(669.17), Double.valueOf(databaseData.getValue()));
+    }
+
+    @Test
+    public void testAvgFunction() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select avg(payment) from test;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        DatabaseSelectRecord databaseSelectRecord = selectRecords.get(0);
+        List<DatabaseData> data = databaseSelectRecord.getData();
+        DatabaseData databaseData = data.get(0);
+        Assert.assertEquals(1, selectRecords.size());
+        Assert.assertEquals(1, data.size());
+        // 345.5+123+200.67 = 669.17 / 3
+        Assert.assertEquals(Double.valueOf(669.17 / 3), Double.valueOf(databaseData.getValue()));
+    }
+
+    @Test
+    public void testMaxFunction() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select max(payment) from test;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        DatabaseSelectRecord databaseSelectRecord = selectRecords.get(0);
+        List<DatabaseData> data = databaseSelectRecord.getData();
+        DatabaseData databaseData = data.get(0);
+        Assert.assertEquals(1, selectRecords.size());
+        Assert.assertEquals(1, data.size());
+        Assert.assertEquals(Double.valueOf(345.5), Double.valueOf(databaseData.getValue()));
+    }
+
+    @Test
+    public void testMinFunction() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select min(payment) from test;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        DatabaseSelectRecord databaseSelectRecord = selectRecords.get(0);
+        List<DatabaseData> data = databaseSelectRecord.getData();
+        DatabaseData databaseData = data.get(0);
+        Assert.assertEquals(1, selectRecords.size());
+        Assert.assertEquals(1, data.size());
+        Assert.assertEquals(Double.valueOf(123), Double.valueOf(databaseData.getValue()));
+    }
+
+    @Test
+    public void testCountFunction() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select count(payment) from test;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        DatabaseSelectRecord databaseSelectRecord = selectRecords.get(0);
+        List<DatabaseData> data = databaseSelectRecord.getData();
+        DatabaseData databaseData = data.get(0);
+        Assert.assertEquals(1, selectRecords.size());
+        Assert.assertEquals(1, data.size());
+        Assert.assertEquals(Double.valueOf(3), Double.valueOf(databaseData.getValue()));
+    }
+
+    @Test
+    public void testEquals() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select full_name from test where full_name = 'TestJohn';");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        DatabaseSelectRecord databaseSelectRecord = selectRecords.get(0);
+        List<DatabaseData> data = databaseSelectRecord.getData();
+        DatabaseData databaseData = data.get(0);
+        Assert.assertEquals(1, selectRecords.size());
+        Assert.assertEquals(1, data.size());
+        Assert.assertEquals("TestJohn", databaseData.getValue());
+    }
+
+    @Test
+    public void testNotEquals() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select full_name from test where full_name != 'TestJohn';");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        DatabaseSelectRecord databaseSelectRecordFirst = selectRecords.get(0);
+        List<DatabaseData> firstRow = databaseSelectRecordFirst.getData();
+        DatabaseSelectRecord databaseSelectRecordSecord = selectRecords.get(1);
+        List<DatabaseData> secondRow = databaseSelectRecordSecord.getData();
+        Assert.assertEquals(2, selectRecords.size());
+        Assert.assertEquals("TestAndrea", firstRow.get(0).getValue());
+        Assert.assertEquals("TestMichael", secondRow.get(0).getValue());
+    }
+
+    @Test
+    public void testGreaterThanEqualsInWhere() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select payment from test where payment >= 200.67;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        Assert.assertEquals(2, selectRecords.size());
+    }
+
+    @Test
+    public void testLessThanEqualsInWhere() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select payment from test where payment <= 200.66;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        Assert.assertEquals(1, selectRecords.size());
+    }
+
+    @Test
+    public void testLessThanInWhere() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select payment from test where payment < 345.5;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        Assert.assertEquals(2, selectRecords.size());
+    }
+
+    @Test(expected = ColumnTypeException.class)
+    public void testLessThanWithVarcharInWhere() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select full_name from test where full_name < 345.5;");
+    }
+
+    @Test(expected = ColumnTypeException.class)
+    public void testGreaterThanWithVarcharInWhere() {
+        createTableAndInsertDataForFunctionTest();
+        DatabaseInterpreter.interpret("select full_name from test where full_name > 345.5;");
+    }
+
+    @Test
+    public void testFunctionWithEmptyTable() {
+        DatabaseInterpreter
+                .interpret("create table test {id number, full_name varchar, dateOfBirth date, payment number};");
+        DatabaseInterpreter.interpret("select count(payment) from test;");
+        DatabaseSelectResult databaseCache = DatabaseSelectCache.getDatabaseCache();
+        List<DatabaseSelectRecord> selectRecords = databaseCache.getSelectRecords();
+        Assert.assertTrue(selectRecords.isEmpty());
+    }
+
+    private void createTableAndInsertDataForFunctionTest() {
         DatabaseInterpreter
                 .interpret("create table test {id number, full_name varchar, dateOfBirth date, payment number};");
         DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (1,'TestJohn',345.5);");
         DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (2,'TestAndrea',200.67);");
         DatabaseInterpreter.interpret("insert into test (id,full_name,payment) values (3,'TestMichael',123);");
-        DatabaseInterpreter.interpret("select sum(payment) from test;");
     }
 
 }

@@ -7,6 +7,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Column_listContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.Function_clauseContext;
 import hu.unideb.inf.fordprog.antlr4.DatabaseHandlerParser.SelectContext;
@@ -23,6 +26,11 @@ import hu.unideb.inf.fordprog.model.DatabaseTableColumnDescriptor;
  *
  */
 public class SelectOperationService extends AbstractOperationService {
+
+    /**
+     * Osztály loggere.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(TableOperationService.class);
 
     private static Set<String> functionNames;
 
@@ -45,6 +53,10 @@ public class SelectOperationService extends AbstractOperationService {
         final String tableName = ctx.tableName.getText();
         DatabaseSelectResult selectResult;
         final List<DatabaseRecord> dataFromTable = Database.getDataFromTable(tableName);
+        if (dataFromTable == null) {
+            LOGGER.info("Table {} is empty.", tableName);
+            return new DatabaseSelectResult();
+        }
         if (isFunction(columns)) {
             // Csak az első funkciót kezeljük!
             Column_listContext functionColumn = columns.get(0);

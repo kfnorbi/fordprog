@@ -13,9 +13,6 @@ public class DatabaseData {
     private DatabaseTableColumnType type;
     private String value;
 
-    public DatabaseData() {
-    }
-
     public DatabaseData(String columnName, DatabaseTableColumnType type, String value) {
         super();
         this.columnName = columnName;
